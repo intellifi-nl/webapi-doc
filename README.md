@@ -34,6 +34,17 @@ Resources
 * events
 TODO: sets, brain senses
 
+events
+------
+The events resource keeps a copy of events that occured. This is an exact copy of the events that are avaialble on the message bus. Please note that lots of events are flowing through the system. The history of events is kept for a limited time. If you would like to retreive all events then you should consider conneting to our message bus through websockets, MQTT or AMQP.
+
+Every event is envelopped in an JSON object with the following fields:
+* resource: One of the strings that we defined in the resources chapter. i.e. spots
+* id: A valid id for the resource that you choose. i.e. 203
+* action: A string that indicates the action that was executed. In most cases it's a verb. i.e. connect
+* object: A JSON object with extra information about the event, or the actual resource if something changed.
+* time: An event always takes place at a fixed time.
+
 Pagination
 ==========
 The number of results is always limited to 100. Obviously we do allow you to make more querys so that you can retreive the rest of the results. This process is called paginiation and keeps our server load at acceptable levels.
@@ -47,3 +58,4 @@ Todo
 * API keys
 * Versioning
 * CORS
+* Explain time format and link to iso.
