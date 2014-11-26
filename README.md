@@ -25,8 +25,80 @@ Resources
 * spots
 * locations
 * presences
+* paths
+* passings
+* sets
+* senses
 * events
-TODO: sets, brain senses
+
+items
+-----
+The items resource will contain all RFID tags and Bluetooth LE (BLE) transponders that are detected by the Intellifi spots. They are automatically added as soon as they are are detected for the first time. The items resource is an abstraction that allows you to work with RFID tags and BLE transponders as if they where the same.
+
+Every item contains at least a unique id, the item_code and the item_codetype. You may add a label to the item. The item_id is the reference to the item that is used in all other places in the system.
+
+* item_id
+* item_code
+* item_codetype
+* label
+* image
+* location_now
+* location_last
+* time_first
+* time_last
+
+You may be worried about the amount of items that could flow into your system. In the future you can configure the spots to only allow certain code ranges with the flexible item sets approach. With this approach you can filter the amount of tags that come into your system. It will also become possible to 'drop' items after a certain amount of time (off course this shall only apply to items that you didn't edit).
+
+spots
+-----
+The Intellifi sports form the eyes and the ears of the server logic. They generate events for every item that is detected. Every spot has it's own representation inside the spots resource. This allows you to see and monitor the current status of a spot.
+
+* spot_id: This is the fixed and unqiue spot id, it's the only id in this API that is not an MongoDB ObjectId.
+* is_online: True when the spot is active and capable of sending events.
+* state: The current state of the spot.
+* request_counter: The total number of HTTP requests that the spot has done.
+* time_first_request: The timestamp of the first HTTP request to this server.
+* time_last_request: The timestamp of the last received HTTP request to this server.
+* received_spot_object: An object with specific information about the spot, directly send by the spot itself when the connection is created.
+* received_spot_config: An object with the current spot configuraton, also directly sned by the spot itself when the connection is created.
+
+At this moment you can't add a label or a note to the spot. We created the seperate location resource for this purpose.
+
+The spots are automatically added to this resource when they are connected to this server. Spots are never deleted automatically, you may delete a spot that is offline with the HTTP delete action.
+
+locations
+---------
+The locations resource allows you to create, read and update the definitions for your locations. A location couples an Intellifi spots to a geographic position and label.
+
+In a way the Intellifi spot 'triggers' an location. If a spot detects an item then it allows the location to perceive. An antenna that is connected to the Intellifi spot may also trigger a location (this is also called a virtual spot). It's even possible to define other locations as trigger. You must define 1 or more triggers on a location. You can use as many triggers as you like. This powerfull concept allows you to define multiple locatons with one spot, or on the other hand: multiple spots in one bigger location.
+
+A default location for a Intellifi spot is automatically created when you connect it to the server for the fist time. You may edit or remove this location. You may also use the Intellifi spot in multiple location definitions. They all will be triggered when the Intellifi spot detects items.
+
+* location_id
+* triggers
+* label
+* hold_time_s (how long should an item be present at this location?)
+* x, y
+* picture
+* building_map (only when you are defining an overlapping location)
+
+presences
+---------
+An item can be present on a location. A presence resource is automatically created when one of the defined location triggers says that an item is detected. A presence is deleted when it has not been detected for n seconds. Where n is the hold time in seconds. So the presence resource exactly tells you where your items are beeing detected at this very moment!
+
+An item can be present on multiple locatons at the same time. This is caused by two main reasons:
+1. You may define locatons that are triggered by another location. I.e. your office building could be triggered by the hall, kitchen that it contains. It's logical that you can be present in the kitchen and in your office building at the same time.
+2. The used technolgy have a great range. Your items may be picked up by multiple devices at the same moment. We will present all this information to you.
+
+We add a estimated proximity to every presence. This is a rought estimate on the distance from the item to the receiver. 3 possible values are returned:
+1. far: the item is detected, but the received signal is weak. In most cases this means that the item is far away, but it also might indicate that you have interference or a seriously low battery.
+2. near: the item is detected with an average signal strength.
+3. immediate: the item is detected with a very strong signal. It must be very close to your antenna.
+The returned value depends on the configured signal levels. It's possible to adjust these levels to your situation, please refer to the detailed Intellifi spot documentation if you would like to do this.
+
+If you added multiple triggers to a location then the strongest proximity is returned in the created presence.
+
+If you just only want to know where something is located then we have good news: we already did the hard work for you. The location service does a best fit and determines where your item is. The calculated location is directly saved within the items resource.
 
 events
 ------
