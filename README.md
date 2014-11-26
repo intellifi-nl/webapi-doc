@@ -49,10 +49,10 @@ The `codetype_mask` is a bitwise number that allows you to identify the kind of 
 
 1. RFID tag (EPC Gen2)
 2. Bluetooth LE transponder: indicates that you shall have attributes to read full PDU and MAC address.
-4. iBeacon: indicates that you shall have uuid, major and minor. Not yet supported, may change.
-8. [Proximity profile](http://stackoverflow.com/questions/16952185/what-exactly-is-the-proximity-profile-with-respect-to-the-bluetooth-low-energy): indicates that you can read the RSSI value that is received on the transponder, after connecting to it. Not yet supported, may change.
-16. [Find me profile](https://developer.bluetooth.org/TechnologyOverview/Pages/FMP.aspx): indicates that you can request an alert sounding on a specific item. Not yet supported, may change.
-32 [Battery profile](https://developer.bluetooth.org/TechnologyOverview/Pages/BAS.aspx): Will allow you to know the current battery status of the item.
+4. [iBeacon](http://en.wikipedia.org/wiki/IBeacon): indicates that you shall have UUID, major and minor. Not yet supported, may change.
+8. [BLE Proximity profile](http://stackoverflow.com/questions/16952185/what-exactly-is-the-proximity-profile-with-respect-to-the-bluetooth-low-energy): indicates that you can read the RSSI value that is received on the transponder, after connecting to it. Not yet supported, may change.
+16. [BLE Find me profile](https://developer.bluetooth.org/TechnologyOverview/Pages/FMP.aspx): indicates that you can request an alert sounding on a specific item. Not yet supported, may change.
+32. [BLE Battery profile](https://developer.bluetooth.org/TechnologyOverview/Pages/BAS.aspx): Will allow you to know the current battery status of the item.
 
 Other [profiles](https://developer.bluetooth.org/TechnologyOverview/Pages/Profiles.aspx) may be supported in the future as well.
 
