@@ -33,17 +33,28 @@ items
 -----
 The items resource will contain all RFID tags and Bluetooth LE (BLE) transponders that are detected by the Intellifi spots. They are automatically added as soon as they are are detected for the first time. The items resource is an abstraction that allows you to work with RFID tags and BLE transponders as if they where the same.
 
-Every item contains at least a unique id, the `item_code` and the `item_codetype`. You may add a label to the item. The item_id is the reference to the item that is used in all other places in the system.
+Every item contains at least a unique id, the `code` and the `codetype_mask`. You may add a label to the item. The item_id is the reference to the item that is used in all other places in the system.
 
-* item_id
-* item_code
-* item_codetype
-* label
-* image
-* location_now
-* location_last
-* time_first
-* time_last
+* `item_id`
+* `code`
+* `codetype_mask`
+* `label`
+* `image`
+* `location_now`
+* `location_last`
+* `time_first`
+* `time_last`
+
+The `codetype_mask` is a bitwise number that allows you to identify the kind of technology that was detected. Within bluetooth it's possible to detect multiple types at the same time. i.e. A Bluetooth LE transponder may be an iBeacon. We might add support to other Bluetooth profiles in the future, we also could support other technologys at some point. For now we have this list with types:
+
+1. RFID tag (EPC Gen2)
+2. Bluetooth LE transponder: indicates that you shall have attributes to read full PDU and MAC address.
+4. iBeacon: indicates that you shall have uuid, major and minor. Not yet supported, may change.
+8. [Proximity profile](http://stackoverflow.com/questions/16952185/what-exactly-is-the-proximity-profile-with-respect-to-the-bluetooth-low-energy): indicates that you can read the RSSI value that is received on the transponder, after connecting to it. Not yet supported, may change.
+16. [Find me profile](https://developer.bluetooth.org/TechnologyOverview/Pages/FMP.aspx): indicates that you can request an alert sounding on a specific item. Not yet supported, may change.
+32 [Battery profile](https://developer.bluetooth.org/TechnologyOverview/Pages/BAS.aspx): Will allow you to know the current battery status of the item.
+
+Other [profiles](https://developer.bluetooth.org/TechnologyOverview/Pages/Profiles.aspx) may be supported in the future as well.
 
 You may be worried about the amount of items that could flow into your system. In the future you can configure the spots to only allow certain code ranges with the flexible item sets approach. With this approach you can filter the amount of tags that come into your system. It will also become possible to 'drop' items after a certain amount of time (off course this shall only apply to items that you didn't edit).
 
