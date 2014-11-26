@@ -35,7 +35,7 @@ items
 -----
 The items resource will contain all RFID tags and Bluetooth LE (BLE) transponders that are detected by the Intellifi spots. They are automatically added as soon as they are are detected for the first time. The items resource is an abstraction that allows you to work with RFID tags and BLE transponders as if they where the same.
 
-Every item contains at least a unique id, the item_code and the item_codetype. You may add a label to the item. The item_id is the reference to the item that is used in all other places in the system.
+Every item contains at least a unique id, the `item_code` and the `item_codetype`. You may add a label to the item. The item_id is the reference to the item that is used in all other places in the system.
 
 * item_id
 * item_code
@@ -68,7 +68,7 @@ The spots are automatically added to this resource when they are connected to th
 
 locations
 ---------
-The locations resource allows you to create, read and update the definitions for your locations. A location couples an Intellifi spots to a geographic position and label.
+The locations resource allows you to create, read and update the definitions for your locations. A location couples Intellifi spots to a geographic position and label.
 
 In a way the Intellifi spot 'triggers' an location. If a spot detects an item then it allows the location to perceive. An antenna that is connected to the Intellifi spot may also trigger a location (this is also called a virtual spot). It's even possible to define other locations as trigger. You must define 1 or more triggers on a location. You can use as many triggers as you like. This powerfull concept allows you to define multiple locatons with one spot, or on the other hand: multiple spots in one bigger location.
 
@@ -87,10 +87,12 @@ presences
 An item can be present on a location. A presence resource is automatically created when one of the defined location triggers says that an item is detected. A presence is deleted when it has not been detected for n seconds. Where n is the hold time in seconds. So the presence resource exactly tells you where your items are beeing detected at this very moment!
 
 An item can be present on multiple locatons at the same time. This is caused by two main reasons:
+
 1. You may define locatons that are triggered by another location. I.e. your office building could be triggered by the hall, kitchen that it contains. It's logical that you can be present in the kitchen and in your office building at the same time.
 2. The used technolgy have a great range. Your items may be picked up by multiple devices at the same moment. We will present all this information to you.
 
 We add a estimated proximity to every presence. This is a rought estimate on the distance from the item to the receiver. 3 possible values are returned:
+
 1. far: the item is detected, but the received signal is weak. In most cases this means that the item is far away, but it also might indicate that you have interference or a seriously low battery.
 2. near: the item is detected with an average signal strength.
 3. immediate: the item is detected with a very strong signal. It must be very close to your antenna.
