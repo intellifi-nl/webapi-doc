@@ -6,12 +6,10 @@ We provide a RESTful API that allows you to access all the data that we provide 
 
 At this moment we only support JSON as output format.
 
-By default the api is accessible on: http(s)://{host}/api/{resource}/{id}
-* The host will be provided to you when you are evaluating or purchasing our product. We always have an 'play-arround' brain that we can supply to you.
-* The {resource} shall will contain the resource that you want to query. This is most of the times the plural form of a noun.
-* The {id} indicates which specific resource you wish to access. Please refer to the individual resourcse for more information on the type of id that is used. In most resources this is a [MongoDB ObjectId](http://docs.mongodb.org/manual/reference/object-id/). You can omit the {id}: the server will return a list with all items in the resource (not if it's to much: see paginiation).
-
-TODO: State vs events (seperate access to message bus and websocket)
+By default the api is accessible on: http://`host`/api/`resource`/`id`
+* The `host` will be provided to you when you are evaluating or purchasing our product. We always have an 'play-arround' brain that we can supply to you.
+* The `resource` shall will contain the resource that you want to query. This is most of the times the plural form of a noun.
+* The optional `id` indicates which specific resource you wish to access. Please refer to the individual resourcse for more information on the type of id that is used. In most resources this is a [MongoDB ObjectId](http://docs.mongodb.org/manual/reference/object-id/). If you omit `id` the server will return a list with all items in the resource.
 
 Explorability
 =============
@@ -96,7 +94,9 @@ We add a estimated proximity to every presence. This is a rought estimate on the
 1. far: the item is detected, but the received signal is weak. In most cases this means that the item is far away, but it also might indicate that you have interference or a seriously low battery.
 2. near: the item is detected with an average signal strength.
 3. immediate: the item is detected with a very strong signal. It must be very close to your antenna.
-The returned value depends on the configured signal levels. It's possible to adjust these levels to your situation, please refer to the detailed Intellifi spot documentation if you would like to do this.
+The returned value depends on the configured signal levels. 
+
+> It's possible to adjust these levels to your situation, please refer to the detailed Intellifi spot documentation if you would like to do this.
 
 If you added multiple triggers to a location then the strongest proximity is returned in the created presence.
 
@@ -124,6 +124,8 @@ Todo
 ====
 * Authentication
 * API keys
-* Versioning
+* Versioning (/v2/)
 * CORS
 * Explain time format and link to iso.
+* TODO: State vs events (seperate access to message bus and websocket)
+* TODO: https is not yet supported, use http!
