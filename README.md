@@ -1,8 +1,6 @@
-This document contain the offical documentation on the Intellifi brain web API.
-
-Overview
-========
-We provide a RESTful API that allows you to access all the data that we provide in a powerfull and simple way.
+Web API documentation
+=====================
+This document contain the offical web API documentation. We provide a RESTful API that allows you to access all the data that we provide in a powerfull and simple way.
 
 At this moment we only support JSON as output format.
 
@@ -11,14 +9,18 @@ By default the api is accessible on: http://`host`/api/`resource`/`id`
 * The `resource` shall will contain the resource that you want to query. This is most of the times the plural form of a noun.
 * The optional `id` indicates which specific resource you wish to access. Please refer to the individual resourcse for more information on the type of id that is used. In most resources this is a [MongoDB ObjectId](http://docs.mongodb.org/manual/reference/object-id/). If you omit `id` the server will return a list with all items in the resource.
 
+As with every web API you can only request new information by doing an extra request. We offer a whole set of [pushing technologies](https://github.com/intellifi-nl/doc-push). They will allow you to be informed when something changes, instead of polling for changes.
+
 Explorability
-=============
+-------------
+
 We find it very important that our web API is self explaining. We strongly recommand you to install a JSON viewer plugin in your webbrowser. This will allow you to view the query results in your web browser. For Google Chrome we advice you to use [JSONView](https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc). Without doubt there will be a nice plugin for your own personal browser as well.
 
-Most of the resources include links to other relevant resources. These links are added as fields to the JSON objects. A good JSON viewer (see previous paragrah) will allow you to follow them with a simple click. These fields always have the "url_" prefix.
+Most of the resources include links to other relevant resources. These links are added as fields to the JSON objects. A good JSON viewer will allow you to follow them with a simple click. These fields always have the "url_" prefix.
 
 Resources
-=========
+---------
+
 * items
 * spots
 * locations
@@ -31,6 +33,7 @@ Resources
 
 items
 -----
+
 The items resource will contain all RFID tags and Bluetooth LE (BLE) transponders that are detected by the Intellifi spots. They are automatically added as soon as they are are detected for the first time. The items resource is an abstraction that allows you to work with RFID tags and BLE transponders as if they where the same.
 
 Every item contains at least a unique id, the `code` and the `codetype_mask`. You may add a label to the item. The item_id is the reference to the item that is used in all other places in the system.
@@ -60,6 +63,7 @@ You may be worried about the amount of items that could flow into your system. I
 
 spots
 -----
+
 The Intellifi sports form the eyes and the ears of the server logic. They generate events for every item that is detected. Every spot has it's own representation inside the spots resource. This allows you to see and monitor the current status of a spot.
 
 * spot_id: This is the fixed and unqiue spot id, it's the only id in this API that is not an MongoDB ObjectId.
@@ -77,6 +81,7 @@ The spots are automatically added to this resource when they are connected to th
 
 locations
 ---------
+
 The locations resource allows you to create, read and update the definitions for your locations. A location couples Intellifi spots to a geographic position and label.
 
 In a way the Intellifi spot 'triggers' an location. If a spot detects an item then it allows the location to perceive. An antenna that is connected to the Intellifi spot may also trigger a location (this is also called a virtual spot). It's even possible to define other locations as trigger. You must define 1 or more triggers on a location. You can use as many triggers as you like. This powerfull concept allows you to define multiple locatons with one spot, or on the other hand: multiple spots in one bigger location.
@@ -93,6 +98,7 @@ A default location for a Intellifi spot is automatically created when you connec
 
 presences
 ---------
+
 An item can be present on a location. A presence resource is automatically created when one of the defined location triggers says that an item is detected. A presence is deleted when it has not been detected for n seconds. Where n is the hold time in seconds. So the presence resource exactly tells you where your items are beeing detected at this very moment!
 
 An item can be present on multiple locatons at the same time. This is caused by two main reasons:
@@ -115,6 +121,7 @@ If you just only want to know where something is located then we have good news:
 
 events
 ------
+
 The events resource keeps a copy of events that occured. This is an exact copy of the events that are avaialble on the message bus. Please note that lots of events are flowing through the system. The history of events is kept for a limited time. If you would like to retreive all events then you should consider conneting to our message bus through websockets, MQTT or AMQP.
 
 Every event is envelopped in an JSON object with the following fields:
@@ -125,14 +132,16 @@ Every event is envelopped in an JSON object with the following fields:
 * time: An event always takes place at a fixed time.
 
 Pagination
-==========
+----------
+
 The number of results is always limited to 100. Obviously we do allow you to make more querys so that you can retreive the rest of the results. This process is called paginiation and keeps our server load at acceptable levels.
 * Default list/listing envelope
 * Links that help you
 * TODO: Implement RFC specific headers?
 
 Todo
-====
+----
+
 * Authentication
 * API keys
 * Versioning (/v2/)
