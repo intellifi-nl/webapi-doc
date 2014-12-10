@@ -1,5 +1,6 @@
 Web API documentation
 =====================
+
 This document contain the offical web API documentation. We provide a RESTful API that allows you to access all the data that we provide in a powerfull and simple way.
 
 At this moment we only support JSON as output format.
@@ -11,6 +12,11 @@ By default the api is accessible on: http://`host`/api/`resource`/`id`
 
 As with every web API you can only request new information by doing an extra request. We offer a whole set of [pushing technologies](https://github.com/intellifi-nl/doc-push). They will allow you to be informed when something changes, instead of polling for changes.
 
+Contents
+--------
+
+Automatic table of contents?
+
 Explorability
 -------------
 
@@ -18,8 +24,29 @@ We find it very important that our web API is self explaining. We strongly recom
 
 Most of the resources include links to other relevant resources. These links are added as fields to the JSON objects. A good JSON viewer will allow you to follow them with a simple click. These fields always have the "url_" prefix.
 
+Intellifi terminology
+=====================
+
+The whole Intellifi concept is based upon items and zones. Please take some time to familiarize with these definitions. They will make it way easier to understand this API.
+
+Items
+-----
+
+An item is a verry little electronic device that contains and remembers a unique code. An item must be able to transmit this unqiue code wireless. This item may be a passive RFID tag, but it can also be an iBeacon. Even your smartphone could behave itself as an item. A device is an item as long as it's able to remember and transmit it's unique code.
+
+Zones
+-----
+
+A zone is an area in which items can be detected. This area is naturually limited to the range of the used RFID technology. Passive tags have a range of approximately 10 meters, active tags can easily have a range of 100+ meters. A zone must be able to reports it's detected items.
+
+A lot of devices are capable of behaving themselves as 'zones'. Our [Intellif Spot](http://intellifi.nl/home/products/) is a very good example of this. It can detect RFID tags and Bluetooth tags that are in the neighbourhoud. It reports these detections through it's network interface to a server. It's also possible to connect external antennas to the Spot. By default they are used to enlarge the reach of the overall Spot zone. You may configure individual external antenna to behave themselve as a zone as well. By doing so you are essentially creating a virtual spot. 
+
+Another great example of a zone could be your smartphone. Lot's of smartphones support the detection if iBeacons. It's a matter of the right app to report this information to a server. And voilà: here's another zone that you can use to detect your items.
+
+A zone is an abstraction and is not avaialble as a resource. Please make sure to read more about the locatons resource, there we will 'connect' the zone to the rest of the description.
+
 Resources
----------
+=========
 
 * items
 * spots
@@ -30,6 +57,7 @@ Resources
 * sets
 * senses
 * events
+
 
 items
 -----
@@ -74,6 +102,7 @@ The Intellifi sports form the eyes and the ears of the server logic. They genera
 * time_last_request: The timestamp of the last received HTTP request to this server.
 * received_spot_object: An object with specific information about the spot, directly send by the spot itself when the connection is created.
 * received_spot_config: An object with the current spot configuraton, also directly sned by the spot itself when the connection is created.
+* report_location: May be null, may contain an location id to 
 
 At this moment you can't add a label or a note to the spot. We created the seperate location resource for this purpose.
 
@@ -86,7 +115,7 @@ The locations resource allows you to create, read and update the definitions for
 
 In a way the Intellifi spot 'triggers' an location. If a spot detects an item then it allows the location to perceive. An antenna that is connected to the Intellifi spot may also trigger a location (this is also called a virtual spot). It's even possible to define other locations as trigger. You must define 1 or more triggers on a location. You can use as many triggers as you like. This powerfull concept allows you to define multiple locatons with one spot, or on the other hand: multiple spots in one bigger location.
 
-A default location for a Intellifi spot is automatically created when you connect it to the server for the fist time. You may edit or remove this location. You may also use the Intellifi spot in multiple location definitions. They all will be triggered when the Intellifi spot detects items.
+A default location for a Intellifi Spot is automatically created when you connect it to the server for the fist time. You may edit or remove this location. You may also use the Intellifi spot in multiple location definitions. They all will be triggered when the Intellifi spot detects items.
 
 * location_id
 * triggers
@@ -122,7 +151,7 @@ If you just only want to know where something is located then we have good news:
 events
 ------
 
-The events resource keeps a copy of events that occured. This is an exact copy of the events that are avaialble on the message bus. Please note that lots of events are flowing through the system. The history of events is kept for a limited time. If you would like to retreive all events then you should consider conneting to our message bus through websockets, MQTT or AMQP.
+The events resource keeps a copy of events that occured. This is an exact copy of the events that are avaialble on the message bus. Please note that lots of events are flowing through the system. The history of events is kept for a limited time. If you would like to retreive all events then you should consider conneting to our message bus through one of the avaialbe [push technologies](https://github.com/intellifi-nl/doc-push).
 
 Every event is envelopped in an JSON object with the following fields:
 * resource: One of the strings that we defined in the resources chapter. i.e. spots
