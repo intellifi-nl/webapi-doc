@@ -22,6 +22,7 @@ Contents
 * [Resources](#resources)
   * [Items](#items)
   * [Spots](#spots)
+  * [Antennas](#antennas)
   * [Locations](#locations)
   * [Presences](#presences)
   * [Paths](#paths) (not yet)
@@ -116,8 +117,8 @@ At this moment you can't add a label or a note to the spot. We created the seper
 
 The spots are automatically added to this resource when they are connected to this server. Spots are never deleted automatically, you may delete a spot that is offline with the HTTP delete action.
 
-Antenna
--------
+Antennas
+--------
 
 A Spots contains one or more antennas, you may also connect external antennas to a Spot. You can use this resource to query all the antennas avaialble in your system. You may let a single antenna report to location (off by default). Doing so effectively defines an extra zone, or virtual spot.
 
