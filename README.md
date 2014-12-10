@@ -1,7 +1,7 @@
-Web API documentation
+Brain web API documentation
 =====================
 
-This document contain the offical web API documentation. We provide a RESTful API that allows you to access all the data that we provide in a powerfull and simple way.
+This document contain the offical Brain web API documentation. We provide a RESTful API that allows you to access all the data that we provide in a powerfull and simple way.
 
 At this moment we only support JSON as output format.
 
@@ -24,11 +24,11 @@ Contents
   * [Spots](#spots)
   * [Locations](#locations)
   * [Presences](#presences)
-  * [Paths](#paths)
-  * [Passings](#passings)
-  * [Sets](#sets)
-  * [Senses](#senses)
-  * [Events](#events)
+  * [Paths](#paths) (not yet)
+  * [Passings](#passings) (not yet)
+  * [Sets](#sets) (not yet)
+  * [Senses](#senses) (not yet)
+  * [Events](#events)  
 * [Pagination](#pagination)
 * [Todo](#todo)
 
@@ -119,10 +119,12 @@ The spots are automatically added to this resource when they are connected to th
 Antenna
 -------
 
-Spots always contain multiple antennas. You can use this resource to query all the antennas avaialble in your system. You may let a single antenna report to another location. By default this is off. Doing so effectively allows you to use a zone.
+A Spots contains one or more antennas, you may also connect external antennas to a Spot. You can use this resource to query all the antennas avaialble in your system. You may let a single antenna report to location (off by default). Doing so effectively defines an extra zone, or virtual spot.
 
-* spot_id
+* antenna_id: The unique id of the antenna.
+* spot_id: To which Spot is the antenna connected?
 * antenna_number: Number starting at 1, for smart antennas we are probably going to have some unique number.
+* is_internal: Boolean indicating if this is an internal er external antenna.
 * report_location: By default null, may be set to a higher number.
 
 You don't add a label or location here as well. You define it in the location that the antenna reports to.
@@ -134,7 +136,7 @@ Locations
 
 The locations resource allows you to create, read and update the definitions for your locations. A location couples [zones](#zone)(i.e an Intellifi Spot) to a geographic position and label.
 
-In a way the zone 'triggers' an location. If a zone detects an item then it allows the location to perceive. In most situations your Intellifi Spot will behave itself as a single zone and will trigger a locaton. An antenna that is connected to the Intellifi spot may also be used as a zone. And thus can also trigger a location (this is also called a virtual spot). A location can also behave itself as a zone. It can 'forward' the received events to it's configured parent_location. This is a powerfull concept that allows you to layer your locations. The kitchen, hall and livingroom could report to a house locaton for example.
+In a way zones 'trigger' locations. If a zone detects an item then it allows the connected location to perceive. In most situations your Intellifi Spot will behave itself as a single zone and will trigger a locaton. An antenna that is connected to the Intellifi spot may also be used as a zone. And thus can also trigger a location (this is also called a virtual spot). A location can also behave itself as a zone. It can 'forward' the received events to it's configured parent_location. This is a powerfull concept that allows you to layer your locations. The kitchen, hall and livingroom could report to a house locaton for example.
 
 The locations are coupled by a bottum-up approach. Every zone should report to a locaton. Every location may report to another location (repeat this sentice as many time as you wish). You may let different zones report to a single location. Effectively this will allow you to filter your information. With the [presence resource](#presences) you can query to presences on a certain location. If you are only intrested in the people that are currently in your house then you can just query for that.
 
@@ -148,18 +150,23 @@ A default location for a Intellifi Spot is automatically created when you connec
 * x, y
 * picture
 * building_map (only when you are defining an overlapping location)
+* report_location: The location that this locaton reports to, null by default. You could also see this as the parent_location.
 
 Presences
 ---------
 
-An item can be present on a location. A presence resource is automatically created when one of the defined location triggers says that an item is detected. A presence is deleted when it has not been detected for n seconds. Where n is the hold time in seconds. So the presence resource exactly tells you where your items are beeing detected at this very moment!
+An item can be present on a location. A presence resource is automatically created when one of the defined location triggers says that an item is detected. A presence is deleted when it has not been detected for n seconds. Where n is the hold time in seconds. So the presence resource exactly tells you where your items are beeing detected at this very moment.
 
 An item can be present on multiple locatons at the same time. This is caused by two main reasons:
 
 1. You may define locatons that are triggered by another location. I.e. your office building could be triggered by the hall, kitchen that it contains. It's logical that you can be present in the kitchen and in your office building at the same time.
 2. The used technolgy have a great range. Your items may be picked up by multiple devices at the same moment. We will present all this information to you.
 
-We add a estimated proximity to every presence. This is a rought estimate on the distance from the item to the receiver. 3 possible values are returned:
+If you just only want to know where something is excatly located then we have good news: we already did the hard work for you. The location service does a best fit and determines where your item is. The calculated location is directly saved within the [items](#items) resource. You don't need to query this resource in that situation!
+
+Presence are deleted when their hold time expires, or in other words: when they have not been seen for a some time. This is an important difference to the first API version that we had. You can use the [events resource](#events) to query all events that took place in the system. Including create, update and delete events for presences. So you can always reconstruct the presences that where avaialble at some time. Please let us know if it would make you happy that we did this for you.
+
+We add a estimated proximity to every presence. This is a rough estimate on the distance from the item to the receiver. 3 possible values are returned:
 
 1. far: the item is detected, but the received signal is weak. In most cases this means that the item is far away, but it also might indicate that you have interference or a seriously low battery.
 2. near: the item is detected with an average signal strength.
@@ -170,12 +177,25 @@ The returned value depends on the configured signal levels.
 
 If you added multiple triggers to a location then the strongest proximity is returned in the created presence.
 
-If you just only want to know where something is excatly located then we have good news: we already did the hard work for you. The location service does a best fit and determines where your item is. The calculated location is directly saved within the [items](#items) resource.
+Current fields:
+* presence_id
+* item_id: Which item was detected.
+* location_id: Which location created this presence.
+* proximity
+* time_started
+* time_last
+
+Perhaps later:
+* parent: parent id of presence.
+* children: ids of all children that 'feed' this presence. Should this also include spots or antennas?
+* url_parent: Direct link so that you can explore.
+* url_children: Direct links so that you can explore.
+* url_hits: link to events resource with all hits on this item.
 
 Events
 ------
 
-The events resource keeps a copy of events that occured. This is an exact copy of the events that are avaialble on the message bus. Please note that lots of events are flowing through the system. The history of events is kept for a limited time. If you would like to retreive all events then you should consider conneting to our message bus through one of the avaialbe [push technologies](https://github.com/intellifi-nl/doc-push).
+The events resource keeps a copy of events that occured. This is an exact copy of the events that are avaialble on the message bus. Please note that lots of events are flowing through the system. The history of events is kept for a limited time. If you would like to retreive all events then you should consider conneting to our message bus through one of the avaialble [push technologies](https://github.com/intellifi-nl/doc-push).
 
 Every event is envelopped in an JSON object with the following fields:
 * resource: One of the strings that we defined in the resources chapter. i.e. spots
