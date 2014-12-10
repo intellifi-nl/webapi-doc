@@ -15,22 +15,22 @@ As with every web API you can only request new information by doing an extra req
 Contents
 --------
 
-* [Terminology](#Terminology)
-  * [Item?](#Item)
-  * [Zone?](#Zone)
-* [Explorability](#Explorability)
-* [Resources](#Resource)
-  * [Items](#Items)
-  * [Spots](#Spots)
-  * [Locations](#Locations)
-  * [Presences](#Presences)
-  * [Paths](#Presences)
-  * [Passings](#Passings)
-  * [Sets](#Sets)
-  * [Senses](#Senses)
-  * [Events](#Events)
-* [Pagination](#Pagination)
-* [Todo](#Todo)
+* [Terminology](#terminology)
+  * [Item?](#item)
+  * [Zone?](#zone)
+* [Explorability](#explorability)
+* [Resources](#resources)
+  * [Items](#items)
+  * [Spots](#spots)
+  * [Locations](#locations)
+  * [Presences](#presences)
+  * [Paths](#paths)
+  * [Passings](#passings)
+  * [Sets](#sets)
+  * [Senses](#senses)
+  * [Events](#events)
+* [Pagination](#pagination)
+* [Todo](#todo)
 
 Terminology
 ===========
