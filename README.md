@@ -16,8 +16,8 @@ Contents
 --------
 
 * [Terminology](#terminology)
-  * [Item?](#item)
-  * [Zone?](#zone)
+  * [Item](#item)
+  * [Zone](#zone)
 * [Explorability](#explorability)
 * [Resources](#resources)
   * [Items](#items)
@@ -41,6 +41,8 @@ Item
 ----
 
 An item is a verry little electronic device that contains and remembers a unique code. An item must be able to transmit this unqiue code wireless. This item may be a passive RFID tag, but it can also be an iBeacon. Even your smartphone could behave itself as an item. A device is an item as long as it's able to remember and transmit it's unique code.
+
+An item is an abstraction that allows us to work with RFID tags and iBeacon tags as if they where the same.
 
 Zone
 ----
@@ -66,9 +68,9 @@ Resources
 Items
 -----
 
-The items resource will contain all RFID tags and Bluetooth LE (BLE) transponders that are detected by the Intellifi spots. They are automatically added as soon as they are are detected for the first time. The items resource is an abstraction that allows you to work with RFID tags and BLE transponders as if they where the same.
+The items resource will contain all [item](#item) objects that where detected by one of the connected [zones](#zone). They are automatically added as soon as they are are detected for the first time. The items resource couples a unique id to every item and gives a place to add more information to an item.
 
-Every item contains at least a unique id, the `code` and the `codetype_mask`. You may add a label to the item. The item_id is the reference to the item that is used in all other places in the system.
+Every item contains at least a unique id (`item_id`), the `code` and the `codetype_mask`. You may add a label to the item. The `item_id` is the reference to the item that is used in all other places in the system.
 
 * `item_id`
 * `code`
@@ -96,9 +98,9 @@ You may be worried about the amount of items that could flow into your system. I
 Spots
 -----
 
-The Intellifi sports form the eyes and the ears of the server logic. They generate events for every item that is detected. Every spot has it's own representation inside the spots resource. This allows you to see and monitor the current status of a spot.
+The Intellifi Spots form the eyes and the ears of the server logic. They generate events for every item that is detected. By doing so they implement the [zone](#zone) abstraction. Every spot has it's own representation inside the spots resource. This allows you to see and monitor the current status of a spot. And to set the locaton that the spot reports it's detections to.
 
-* spot_id: This is the fixed and unqiue spot id, it's the only id in this API that is not an MongoDB ObjectId.
+* spot_id: This is the fixed and unqiue spot id, at this moment it's the only id in this API that is not an MongoDB ObjectId.
 * is_online: True when the spot is active and capable of sending events.
 * state: The current state of the spot.
 * request_counter: The total number of HTTP requests that the spot has done.
@@ -106,23 +108,41 @@ The Intellifi sports form the eyes and the ears of the server logic. They genera
 * time_last_request: The timestamp of the last received HTTP request to this server.
 * received_spot_object: An object with specific information about the spot, directly send by the spot itself when the connection is created.
 * received_spot_config: An object with the current spot configuraton, also directly sned by the spot itself when the connection is created.
-* report_location: May be null, may contain an location id to 
+* report_location: Contains the `location_id` that this overall spot reports it's detection to. You may set this to null if you don't want the spot to report overall presences.
+
+Every antenna should also be avaialble. Should we create a seperate resource for antennas, including smart antennas with their properties so that we can request them? They could also have report_locaton then.
 
 At this moment you can't add a label or a note to the spot. We created the seperate location resource for this purpose.
 
 The spots are automatically added to this resource when they are connected to this server. Spots are never deleted automatically, you may delete a spot that is offline with the HTTP delete action.
 
+Antenna
+-------
+
+Spots always contain multiple antennas. You can use this resource to query all the antennas avaialble in your system. You may let a single antenna report to another location. By default this is off. Doing so effectively allows you to use a zone.
+
+* spot_id
+* antenna_number: Number starting at 1, for smart antennas we are probably going to have some unique number.
+* report_location: By default null, may be set to a higher number.
+
+You don't add a label or location here as well. You define it in the location that the antenna reports to.
+
+The antennas are always created automatically when the spot is connected.
+
 Locations
 ---------
 
-The locations resource allows you to create, read and update the definitions for your locations. A location couples Intellifi spots to a geographic position and label.
+The locations resource allows you to create, read and update the definitions for your locations. A location couples [zones](#zone)(i.e an Intellifi Spot) to a geographic position and label.
 
-In a way the Intellifi spot 'triggers' an location. If a spot detects an item then it allows the location to perceive. An antenna that is connected to the Intellifi spot may also trigger a location (this is also called a virtual spot). It's even possible to define other locations as trigger. You must define 1 or more triggers on a location. You can use as many triggers as you like. This powerfull concept allows you to define multiple locatons with one spot, or on the other hand: multiple spots in one bigger location.
+In a way the zone 'triggers' an location. If a zone detects an item then it allows the location to perceive. In most situations your Intellifi Spot will behave itself as a single zone and will trigger a locaton. An antenna that is connected to the Intellifi spot may also be used as a zone. And thus can also trigger a location (this is also called a virtual spot). A location can also behave itself as a zone. It can 'forward' the received events to it's configured parent_location. This is a powerfull concept that allows you to layer your locations. The kitchen, hall and livingroom could report to a house locaton for example.
+
+The locations are coupled by a bottum-up approach. Every zone should report to a locaton. Every location may report to another location (repeat this sentice as many time as you wish). You may let different zones report to a single location. Effectively this will allow you to filter your information. With the [presence resource](#presences) you can query to presences on a certain location. If you are only intrested in the people that are currently in your house then you can just query for that.
+
+These concepts allow you to use the Intellifi Spots in a lot of situations. You can let multiple spots report to a single big location. Effectively a bigger zone. You can also let one Spot report to several smaller locations. Every antenna can be used as a seperate zone.
 
 A default location for a Intellifi Spot is automatically created when you connect it to the server for the fist time. You may edit or remove this location. You may also use the Intellifi spot in multiple location definitions. They all will be triggered when the Intellifi spot detects items.
 
 * location_id
-* triggers
 * label
 * hold_time_s (how long should an item be present at this location?)
 * x, y
@@ -150,7 +170,7 @@ The returned value depends on the configured signal levels.
 
 If you added multiple triggers to a location then the strongest proximity is returned in the created presence.
 
-If you just only want to know where something is located then we have good news: we already did the hard work for you. The location service does a best fit and determines where your item is. The calculated location is directly saved within the items resource.
+If you just only want to know where something is excatly located then we have good news: we already did the hard work for you. The location service does a best fit and determines where your item is. The calculated location is directly saved within the [items](#items) resource.
 
 Events
 ------
