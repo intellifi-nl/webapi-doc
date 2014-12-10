@@ -15,27 +15,35 @@ As with every web API you can only request new information by doing an extra req
 Contents
 --------
 
-Automatic table of contents?
+* [Terminology](#Terminology)
+  * [Item?](#Item)
+  * [Zone?](#Zone)
+* [Explorability](#Explorability)
+* [Resources](#Resource)
+  * [Items](#Items)
+  * [Spots](#Spots)
+  * [Locations](#Locations)
+  * [Presences](#Presences)
+  * [Paths](#Presences)
+  * [Passings](#Passings)
+  * [Sets](#Sets)
+  * [Senses](#Senses)
+  * [Events](#Events)
+* [Pagination](#Pagination)
+* [Todo](#Todo)
 
-Explorability
--------------
-
-We find it very important that our web API is self explaining. We strongly recommand you to install a JSON viewer plugin in your webbrowser. This will allow you to view the query results in your web browser. For Google Chrome we advice you to use [JSONView](https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc). Without doubt there will be a nice plugin for your own personal browser as well.
-
-Most of the resources include links to other relevant resources. These links are added as fields to the JSON objects. A good JSON viewer will allow you to follow them with a simple click. These fields always have the "url_" prefix.
-
-Intellifi terminology
-=====================
+Terminology
+===========
 
 The whole Intellifi concept is based upon items and zones. Please take some time to familiarize with these definitions. They will make it way easier to understand this API.
 
-Items
------
+Item
+----
 
 An item is a verry little electronic device that contains and remembers a unique code. An item must be able to transmit this unqiue code wireless. This item may be a passive RFID tag, but it can also be an iBeacon. Even your smartphone could behave itself as an item. A device is an item as long as it's able to remember and transmit it's unique code.
 
-Zones
------
+Zone
+----
 
 A zone is an area in which items can be detected. This area is naturually limited to the range of the used RFID technology. Passive tags have a range of approximately 10 meters, active tags can easily have a range of 100+ meters. A zone must be able to reports it's detected items.
 
@@ -45,21 +53,17 @@ Another great example of a zone could be your smartphone. Lot's of smartphones s
 
 A zone is an abstraction and is not avaialble as a resource. Please make sure to read more about the locatons resource, there we will 'connect' the zone to the rest of the description.
 
+Explorability
+=============
+
+We find it very important that our web API is self explaining. We strongly recommand you to install a JSON viewer plugin in your webbrowser. This will allow you to view the query results in your web browser. For Google Chrome we advice you to use [JSONView](https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc). Without doubt there will be a nice plugin for your own personal browser as well.
+
+Most of the resources include links to other relevant resources. These links are added as fields to the JSON objects. A good JSON viewer will allow you to follow them with a simple click. These fields always have the "url_" prefix.
+
 Resources
 =========
 
-* items
-* spots
-* locations
-* presences
-* paths
-* passings
-* sets
-* senses
-* events
-
-
-items
+Items
 -----
 
 The items resource will contain all RFID tags and Bluetooth LE (BLE) transponders that are detected by the Intellifi spots. They are automatically added as soon as they are are detected for the first time. The items resource is an abstraction that allows you to work with RFID tags and BLE transponders as if they where the same.
@@ -89,7 +93,7 @@ Other [profiles](https://developer.bluetooth.org/TechnologyOverview/Pages/Profil
 
 You may be worried about the amount of items that could flow into your system. In the future you can configure the spots to only allow certain code ranges with the flexible item sets approach. With this approach you can filter the amount of tags that come into your system. It will also become possible to 'drop' items after a certain amount of time (off course this shall only apply to items that you didn't edit).
 
-spots
+Spots
 -----
 
 The Intellifi sports form the eyes and the ears of the server logic. They generate events for every item that is detected. Every spot has it's own representation inside the spots resource. This allows you to see and monitor the current status of a spot.
@@ -108,7 +112,7 @@ At this moment you can't add a label or a note to the spot. We created the seper
 
 The spots are automatically added to this resource when they are connected to this server. Spots are never deleted automatically, you may delete a spot that is offline with the HTTP delete action.
 
-locations
+Locations
 ---------
 
 The locations resource allows you to create, read and update the definitions for your locations. A location couples Intellifi spots to a geographic position and label.
@@ -125,7 +129,7 @@ A default location for a Intellifi Spot is automatically created when you connec
 * picture
 * building_map (only when you are defining an overlapping location)
 
-presences
+Presences
 ---------
 
 An item can be present on a location. A presence resource is automatically created when one of the defined location triggers says that an item is detected. A presence is deleted when it has not been detected for n seconds. Where n is the hold time in seconds. So the presence resource exactly tells you where your items are beeing detected at this very moment!
@@ -148,7 +152,7 @@ If you added multiple triggers to a location then the strongest proximity is ret
 
 If you just only want to know where something is located then we have good news: we already did the hard work for you. The location service does a best fit and determines where your item is. The calculated location is directly saved within the items resource.
 
-events
+Events
 ------
 
 The events resource keeps a copy of events that occured. This is an exact copy of the events that are avaialble on the message bus. Please note that lots of events are flowing through the system. The history of events is kept for a limited time. If you would like to retreive all events then you should consider conneting to our message bus through one of the avaialbe [push technologies](https://github.com/intellifi-nl/doc-push).
@@ -161,7 +165,7 @@ Every event is envelopped in an JSON object with the following fields:
 * time: An event always takes place at a fixed time.
 
 Pagination
-----------
+==========
 
 The number of results is always limited to 100. Obviously we do allow you to make more querys so that you can retreive the rest of the results. This process is called paginiation and keeps our server load at acceptable levels.
 * Default list/listing envelope
@@ -169,7 +173,7 @@ The number of results is always limited to 100. Obviously we do allow you to mak
 * TODO: Implement RFC specific headers?
 
 Todo
-----
+====
 
 * Authentication
 * API keys
