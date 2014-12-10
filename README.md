@@ -41,9 +41,9 @@ The whole Intellifi concept is based upon items and zones. Please take some time
 Item
 ----
 
-An item is a verry little electronic device that contains and remembers a unique code. An item must be able to transmit this unqiue code wireless. This item may be a passive RFID tag, but it can also be an iBeacon. Even your smartphone could behave itself as an item. A device is an item as long as it's able to remember and transmit it's unique code.
+An item is a small and lightweight electronic device that contains and remembers a unique code. An item must be able to transmit this unqiue code wireless. This item may be a passive RFID tag, but it can also be an iBeacon. Even your smartphone could behave itself as an item. A device is an item as long as it's able to remember and transmit it's unique code.
 
-An item is an abstraction that allows us to work with RFID tags and iBeacon tags as if they where the same.
+An item is an abstraction that allows us to work with RFID tags and iBeacon tags as if they where the same. Attributes are added to the items so that you can see the difference, if you wish.
 
 Zone
 ----
