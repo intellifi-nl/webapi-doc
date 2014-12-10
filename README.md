@@ -54,7 +54,7 @@ A lot of devices are capable of behaving themselves as 'zones'. Our [Intellif Sp
 
 Another great example of a zone could be your smartphone. Lot's of smartphones support the detection if iBeacons. It's a matter of the right app to report this information to a server. And voilà: here's another zone that you can use to detect your items.
 
-A zone is an abstraction and is not avaialble as a resource. Please make sure to read more about the locatons resource, there we will 'connect' the zone to the rest of the description.
+A zone is an abstraction and is not avaialble as a seperate resource. Please make sure to read more about the locations resource, there we will 'connect' the zone to the rest of the description.
 
 Explorability
 =============
@@ -69,9 +69,9 @@ Resources
 Items
 -----
 
-The items resource will contain all [item](#item) objects that where detected by one of the connected [zones](#zone). They are automatically added as soon as they are are detected for the first time. The items resource couples a unique id to every item and gives a place to add more information to an item.
+The items resource will contain all [item](#item) objects that where detected by one of the [zones](#zone). They are automatically added as soon as they are are detected for the first time. The items resource couples a unique id to every item and gives a place to add more information to an item.
 
-Every item contains at least a unique id (`item_id`), the `code` and the `codetype_mask`. You may add a label to the item. The `item_id` is the reference to the item that is used in all other places in the system.
+Every item contains at least a unique id (`item_id`), the detected `code` and the `codetype_mask`. You may add a `label` and an `image` to the item. The `item_id` is the reference to the item that is used in all other places in the system.
 
 * `item_id`
 * `code`
@@ -99,7 +99,9 @@ You may be worried about the amount of items that could flow into your system. I
 Spots
 -----
 
-The Intellifi Spots form the eyes and the ears of the server logic. They generate events for every item that is detected. By doing so they implement the [zone](#zone) abstraction. Every spot has it's own representation inside the spots resource. This allows you to see and monitor the current status of a spot. And to set the locaton that the spot reports it's detections to.
+The Intellifi Spots form the eyes and the ears of the server logic. They generate events for every item that is detected. By doing so they implement the [zone](#zone) abstraction. 
+
+Every spot has it's own representation inside the spots resource. This allows you to see and monitor the current status of a spot. And to set the location that the spot reports it's detections to.
 
 * spot_id: This is the fixed and unqiue spot id, at this moment it's the only id in this API that is not an MongoDB ObjectId.
 * is_online: True when the spot is active and capable of sending events.
@@ -111,39 +113,40 @@ The Intellifi Spots form the eyes and the ears of the server logic. They generat
 * received_spot_config: An object with the current spot configuraton, also directly sned by the spot itself when the connection is created.
 * report_location: Contains the `location_id` that this overall spot reports it's detection to. You may set this to null if you don't want the spot to report overall presences.
 
-Every antenna should also be avaialble. Should we create a seperate resource for antennas, including smart antennas with their properties so that we can request them? They could also have report_locaton then.
-
-At this moment you can't add a label or a note to the spot. We created the seperate location resource for this purpose.
+At this moment you can't add a label or a note to the spot. We created the seperate [location resource](#locations) for this purpose.
 
 The spots are automatically added to this resource when they are connected to this server. Spots are never deleted automatically, you may delete a spot that is offline with the HTTP delete action.
+
+We will include a way to authenticate a spot in the future. This is a critical feature to refrain people from abusing the openness of our system. At this moment we advise you to use production spots in a 'closed' network only. Please let us know if you are very eager to have this feature.
 
 Antennas
 --------
 
-A Spots contains one or more antennas, you may also connect external antennas to a Spot. You can use this resource to query all the antennas avaialble in your system. You may let a single antenna report to location (off by default). Doing so effectively defines an extra zone, or virtual spot.
+All Intellifi Spots contains one or more antennas, you may also connect external antennas to a Spot. You can use this resource to query all the antennas avaialble in your system. You may let a single antenna report to location. Doing so effectively defines an extra zone, or virtual spot.
 
 * antenna_id: The unique id of the antenna.
 * spot_id: To which Spot is the antenna connected?
-* antenna_number: Number starting at 1, for smart antennas we are probably going to have some unique number.
-* is_internal: Boolean indicating if this is an internal er external antenna.
+* antenna_number: Number starting at 1, for smart antennas we are probably going to have a longer unique number.
 * report_location: By default null, may be set to a higher number.
 
 You don't add a label or location here as well. You define it in the location that the antenna reports to.
 
 The antennas are always created automatically when the spot is connected.
 
+You can edit this resource by posting your change to it.
+
 Locations
 ---------
 
 The locations resource allows you to create, read and update the definitions for your locations. A location couples [zones](#zone)(i.e an Intellifi Spot) to a geographic position and label.
 
-In a way zones 'trigger' locations. If a zone detects an item then it allows the connected location to perceive. In most situations your Intellifi Spot will behave itself as a single zone and will trigger a locaton. An antenna that is connected to the Intellifi spot may also be used as a zone. And thus can also trigger a location (this is also called a virtual spot). A location can also behave itself as a zone. It can 'forward' the received events to it's configured parent_location. This is a powerfull concept that allows you to layer your locations. The kitchen, hall and livingroom could report to a house locaton for example.
+A zone can 'trigger' a location. If a zone detects an item then it allows the connected location to perceive. In most situations your Intellifi Spot will behave itself as a single zone and will trigger a single locaton. An antenna that is connected to the Intellifi spot may also be used as a zone. And thus can also trigger a location (this is also called a virtual spot). A location can also behave itself as a zone. It can 'forward' the received events to it's configured parent (`report_location`). This is a powerfull concept that allows you to layer your location definitions. The kitchen, hall and livingroom could report to a house locaton for example.
 
-The locations are coupled by a bottum-up approach. Every zone should report to a locaton. Every location may report to another location (repeat this sentice as many time as you wish). You may let different zones report to a single location. Effectively this will allow you to filter your information. With the [presence resource](#presences) you can query to presences on a certain location. If you are only intrested in the people that are currently in your house then you can just query for that.
+The locations are coupled by a bottum-up approach. Every zone may report to a single locaton. Every location may report to another location (repeat this sentice as many time as you wish). You may let different zones report to a single location. Effectively this will allow you to filter your information. With the [presence resource](#presences) you can query presences on a certain location. In example: if you are only intrested in the people that are currently in your house then you can just query for that.
 
 These concepts allow you to use the Intellifi Spots in a lot of situations. You can let multiple spots report to a single big location. Effectively a bigger zone. You can also let one Spot report to several smaller locations. Every antenna can be used as a seperate zone.
 
-A default location for a Intellifi Spot is automatically created when you connect it to the server for the fist time. You may edit or remove this location. You may also use the Intellifi spot in multiple location definitions. They all will be triggered when the Intellifi spot detects items.
+A default location for a Intellifi Spot is automatically created when you connect it to the server for the fist time. You may edit or remove this location. All connected antennas are automatically created as well, they are not configured to a locaton by default. The overal spot will report for them.
 
 * location_id
 * label
@@ -151,7 +154,7 @@ A default location for a Intellifi Spot is automatically created when you connec
 * x, y
 * picture
 * building_map (only when you are defining an overlapping location)
-* report_location: The location that this locaton reports to, null by default. You could also see this as the parent_location.
+* report_location: The location that this locaton reports to, null by default. In a way it's a parent location.
 
 Presences
 ---------
@@ -212,6 +215,7 @@ The number of results is always limited to 100. Obviously we do allow you to mak
 * Default list/listing envelope
 * Links that help you
 * TODO: Implement RFC specific headers?
+* TODO: Be carefull when resources are added or deleted during a paginiation. If you don't want to miss a thing then the events resource is the only reliable source.
 
 Todo
 ====
