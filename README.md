@@ -18,7 +18,6 @@ Contents
 * [Terminology](#terminology)
   * [Item](#item)
   * [Zone](#zone)
-* [Explorability](#explorability)
 * [Resources](#resources)
   * [Items](#items)
   * [Spots](#spots)
@@ -30,8 +29,12 @@ Contents
   * [Sets](#sets) (not yet)
   * [Senses](#senses) (not yet)
   * [Events](#events)  
-* [Pagination](#pagination)
-* [Todo](#todo)
+* [Design](#design)
+  * [Explorability](#explorability)
+  * [Authentication](#authentication)
+  * [Pagination](#pagination)
+  * [Versioning](#versioning)
+  * [Todo](#todo)
 
 Terminology
 ===========
@@ -56,13 +59,6 @@ Another great example of a zone could be your smartphone. Lot's of smartphones s
 
 So you see that a zone is an abstraction, it can be 'implemented' by multiple devices. Therefore it's not avaialble as a seperate resource in our web API. You will see that most resources mention the word, it's a key concept in our solution.
 
-Explorability
-=============
-
-We find it very important that our web API is self explaining. We strongly recommand you to install a JSON viewer plugin in your webbrowser. This will allow you to view the query results in your web browser. For Google Chrome we advice you to use [JSONView](https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc). Without doubt there will be a nice plugin for your own personal browser as well.
-
-Most of the resources include links to other relevant resources. These links are added as fields to the JSON objects. A good JSON viewer will allow you to follow them with a simple click. These fields always have the "url_" prefix.
-
 Resources
 =========
 
@@ -77,7 +73,7 @@ An item will also contain the current (`location_now`) and last known location (
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| `item_id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for this item. |
+| `item_id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
 | `code` | string | String representation of the unique code that this item transmits. By default this is a hexadecimal representation. These number can be so long (> 40 bytes!) that a decimal representation would be useless to generate.
 | `codetype_mask`  | number | Bitwise number that allows you to identify the kind of technology that was detected. |
 | `label`| string | A name or a label for this item. You may add a number or id for your own system. |
@@ -108,7 +104,7 @@ Every spot has it's own representation inside the spots resource. This allows yo
 
 | Field | Type | Description | 
 | ----- | ---- | ----------- |
-| `spot_id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier as used in the database. |
+| `spot_id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
 | `serial_number` | number | This is the fixed and unqiue spot id, as used in the embedded device. |
 | `is_online` | boolean | True when the spot is active and capable of sending events. |
 | `state` | string | The current state of the spot. |
@@ -132,7 +128,7 @@ All Intellifi Spots contains one or more antennas, you may also connect external
 
 | Field | Type | Description | 
 | ----- | ---- | ----------- |
-| `antenna_id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | The unique id of the antenna. |
+| `antenna_id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
 | `spot` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | To which Spot is the antenna connected? |
 | `antenna_number` | number | Internal number as used in the spot. Starts counting at 1. For smart antennas we are probably going to have a longer unique number. Or shall we have a seperate serial_number field? |
 | `report_location` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | By default null, may be set to a valid `location_id` |
@@ -159,7 +155,7 @@ A default location for an Intellifi Spot is automatically created when you conne
 
 | Field | Type | Description | 
 | ----- | ---- | ----------- |
-| `location_id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | The unique resource identifier. |
+| `location_id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
 | `label` | string | How do you name this resource? Or how do you refer to it in your own applicaton?
 | `hold_time_s` | number | How long should an item be kept present at this location? |
 | `report_location` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to location that this locaton reports to, null by default. In a way it's a parent location. |
@@ -187,7 +183,7 @@ The presence contains these fields:
 
 | Field | Type | Description | 
 | ----- | ---- | ----------- |
-| `presence_id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Resource identifier |
+| `presence_id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
 | `item` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to the item that was detected |
 | `location` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to the locaton that this item was seen on. |
 | `proximity` | string | Strongest proximity of all 'child' presences, see next paragraph. |
@@ -218,19 +214,36 @@ Every event is envelopped in an JSON object with the following fields:
 
 | Field | Type | Description | 
 | ----- | ---- | ----------- |
-| `event_id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique id of resource |
-| `resource` | string | One of the [resources](#resource) that we define in this document (i.e. spots, items). |
-| `resource_id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | A valid id for the resource that you choose. |
-| `event` | string | Indicates the event that was executed. In most cases it's a verb. i.e. connect |
+| `event_id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
+| `resource` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to id of one of the existing resources. |
+| `resource_type` | string | One of the defined [resources](#resource). Is also written in it's plural form. I.e. 'spots', 'items'. |
+| `event` | string | Indicates the event that was executed. In most cases it's a verb. I.e. 'connect', 'create' etc. |
+| `payload` | object | A JSON object with extra information about the event, or the actual resource if something changed. |
 | `time` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was this event resource created at the server? |
 | `time_event` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When did this event actually took place on the device? This is the device it's own timestamp. Could be different due to buffering and clock differences. |
-| `payload` | object | A JSON object with extra information about the event, or the actual resource if something changed. |
 
 Idears:
 * Add url to location change event of previous change. So that we can walk through the location updates. You could also request them by the right query. Perhaps we should also include that at a place?
 
+Design
+======
+
+Import API design decisions are described in this chapter. You will find out why we do some things.
+
+Explorability
+-------------
+
+We find it very important that our web API is self explaining. We strongly recommand you to install a JSON viewer plugin in your webbrowser. This will allow you to view the query results in your web browser. For Google Chrome we advice you to use [JSONView](https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc). Without doubt there will be a nice plugin for your own personal browser as well.
+
+Most of the resources include links to other relevant resources. These links are added as fields to the JSON objects. A good JSON viewer will allow you to follow them with a simple click. These fields always have the "url_" prefix.
+
+Authentication
+--------------
+
+API keys, users etc.
+
 Pagination
-==========
+----------
 
 The number of results is always limited to 100. Obviously we do allow you to make more querys so that you can retreive the rest of the results. This process is called paginiation and keeps our server load at acceptable levels.
 * Default list/listing envelope
@@ -238,13 +251,19 @@ The number of results is always limited to 100. Obviously we do allow you to mak
 * TODO: Implement RFC specific headers?
 * TODO: Be carefull when resources are added or deleted during a paginiation. If you don't want to miss a thing then the events resource is the only reliable source.
 
-Todo
-====
+Versioning
+----------
 
-* Authentication
-* API keys
-* Versioning (/v2/)
+/always the latest versions?
+/v2/?
+
+Todos
+-----
+
 * CORS
 * Explain time format and link to iso.
-* TODO: State vs events (seperate access to message bus and websocket)
-* TODO: https is not yet supported, use http!
+* https is not yet supported.
+* expand for releations.
+* option for extra navigational url's?
+* Time, UTC only on our side. Presentation layer can add a timezone.
+* Move the resources to a seperate page and give only an overview on this page.
