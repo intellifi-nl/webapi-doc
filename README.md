@@ -220,7 +220,8 @@ Every event is envelopped in an JSON object with the following fields:
 | `action` | string | Indicates the kind of event that was executed. In most cases it's a verb. I.e. 'connect', 'create' etc. |
 | `time` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was this event resource created at the server? |
 | `time_event` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When did this event actually took place on the device? This is the device it's own timestamp. Could be different due to buffering and clock differences. |
-| `payload` | object | A JSON object with extra information about the event, or the actual resource if something changed. |
+| `encoding` | string | What can you expect in the payload? 'json' (object), 'utf8' (string), 'base64' (string) or 'null' (null). For all normal events you can expect 'json' or 'null'. |
+| `payload` | see `encoding` | A value with extra information about the event. |
 
 All the event resources have been published on the message bus at some time. You might be wondering where the `topic` field went. It's actually parsed into the `resource-type`, `resource` id and `action` fields. You can find more information in the  [topic format](https://github.com/intellifi-nl/doc-push/blob/master/mqtt_topics.md#format) that is described in the push documentation. 
 
@@ -228,6 +229,7 @@ Be carefull with the given `time` and `time_event` fields. Intellifi Spots can b
 
 Idears:
 * Add url to location change event of previous change. So that we can walk through the location updates. You could also request them by the right query. Perhaps we should also include that at a place?
+* It might be very handy to allow the end user to 'subscribe' this table with a set of topics. It limits system load and allows us to keep sensible events arround longer. Or should we move this to a seperate resource (filtered_events, subscribed_events)? For now we will just subscribe to all events.
 
 Design
 ======
