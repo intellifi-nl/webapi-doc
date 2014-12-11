@@ -217,10 +217,12 @@ Every event is envelopped in an JSON object with the following fields:
 | `event_id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
 | `resource` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to id of one of the existing resources. |
 | `resource_type` | string | One of the defined [resources](#resource). Is also written in it's plural form. I.e. 'spots', 'items'. |
-| `event` | string | Indicates the event that was executed. In most cases it's a verb. I.e. 'connect', 'create' etc. |
-| `payload` | object | A JSON object with extra information about the event, or the actual resource if something changed. |
+| `action` | string | Indicates the kind of event that was executed. In most cases it's a verb. I.e. 'connect', 'create' etc. |
 | `time` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was this event resource created at the server? |
 | `time_event` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When did this event actually took place on the device? This is the device it's own timestamp. Could be different due to buffering and clock differences. |
+| `payload` | object | A JSON object with extra information about the event, or the actual resource if something changed. |
+
+'resource-type', 'resource' id and 'action' directly match the [topic format](https://github.com/intellifi-nl/doc-push/blob/master/mqtt_topics.md#format) that is described in the push documentation.
 
 Idears:
 * Add url to location change event of previous change. So that we can walk through the location updates. You could also request them by the right query. Perhaps we should also include that at a place?
