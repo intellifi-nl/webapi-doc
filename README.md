@@ -8,7 +8,7 @@ At this moment we only support JSON as output format.
 By default the api is accessible on: http://`host`/api/`resource`/`id`
 * The `host` will be provided to you when you are evaluating or purchasing our product. We always have an 'play-arround' brain that we can supply to you.
 * The `resource` shall will contain the resource that you want to query. This is most of the times the plural form of a noun.
-* The **optional** `id` indicates which specific resource you wish to access. Please refer to the individual resourcse for more information on the type of id that is used. In most resources this is a [MongoDB ObjectId](http://docs.mongodb.org/manual/reference/object-id/). If you omit `id` the server will return a list with all items in the resource.
+* The **optional** `id` indicates which specific resource you wish to access. Please refer to the individual resources for more information on the type of id that is used. If you omit `id` the server will return a list with all items in the resource.
 
 As with every web API you can only request new information by doing an extra request. We offer a whole set of [pushing technologies](https://github.com/intellifi-nl/doc-push). They will allow you to be informed when something changes, instead of polling for changes.
 
@@ -83,8 +83,8 @@ An item will also contain the current (`location_now`) and last known location (
 | `label`| string | A name or a label for this item. You may add a number or id for your own system. |
 | `location_now` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to a [location](#locations) if the item as actively detected on some place. Null when the item is not beeing detected. |
 | `location_last` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Almost the same as `location_now`. Is **not** configured to null when object is not detected anymore. |
-| `time_created` | When was this resource created? |
-| `time_last` | When was this resource changed for the last time? |
+| `time_created` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was this resource created? |
+| `time_last` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was this resource changed for the last time? |
 
 The `codetype_mask` field allows you identify the kind of technology that was used to detect the tag.
 It's a bitwise number because multiple technologies can be used at the same time: i.e. A Bluetooth LE transponder may be an iBeacon. A bitwise field required you to sum the individual values, so in case of an iBeacon you sum Bluetooth LE transponder (2) and iBeacon (4). The value would be 2 + 4 = 6.
@@ -105,15 +105,18 @@ The Intellifi Spots form the eyes and the ears of the server logic. They generat
 
 Every spot has it's own representation inside the spots resource. This allows you to see and monitor the current status of a spot. You can also configure the location that the spot reports it's detections to.
 
-* spot_id: This is the fixed and unqiue spot id, at this moment it's the only id in this API that is not an MongoDB ObjectId.
-* is_online: True when the spot is active and capable of sending events.
-* state: The current state of the spot.
-* request_counter: The total number of HTTP requests that the spot has done.
-* time_first_request: The timestamp of the first HTTP request to this server.
-* time_last_request: The timestamp of the last received HTTP request to this server.
-* received_spot_object: An object with specific information about the spot, directly send by the spot itself when the connection is created.
-* received_spot_config: An object with the current spot configuraton, also directly sned by the spot itself when the connection is created.
-* report_location: Contains the `location_id` that this overall spot reports it's detection to. You may set this to null if you don't want the spot to report overall presences.
+| Field | Data type | Description | 
+| ----- | --------- | ----------- |
+| spot_id | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier as used in the database. |
+| serial_number | number | This is the fixed and unqiue spot id, as used in the embedded device. |
+| is_online | boolean | True when the spot is active and capable of sending events. |
+| state | string | The current state of the spot. |
+| request_counter | number | The total number of HTTP requests that the spot has done |
+| time_first_request | ts | The timestamp of the first HTTP request to this server. |
+| time_last_request | ts | The timestamp of the last received HTTP request to this server |
+| received_spot_object | object | An object with specific information about the spot, directly send by the spot itself when the connection is created. |
+| received_spot_config | object | An object with the current spot configuraton, also directly sned by the spot itself when the connection is created. |
+| report_location | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Contains the `location_id` that this overall spot reports it's detection to. You may set this to null if you don't want the spot to report overall presences. |
 
 You can't add a label or a note to the spot. This is by design. We gave the seperate [location resource](#locations) responsibility for labels and notes.
 
@@ -126,10 +129,12 @@ Antennas
 
 All Intellifi Spots contains one or more antennas, you may also connect external antennas to a Spot. You can use this resource to query all available antennas in your system. You may let a single antenna report to location. Doing so effectively defines an extra zone, or virtual spot.
 
-* antenna_id: The unique id of the antenna.
-* spot_id: To which Spot is the antenna connected?
-* antenna_number: Number starting at 1, for smart antennas we are probably going to have a longer unique number.
-* report_location: By default null, may be set to a valid `locaton_id`.
+| Field | Data type | Description | 
+| ----- | --------- | ----------- |
+| antenna_id | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | The unique id of the antenna. |
+| spot | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | To which Spot is the antenna connected? |
+| antenna_number | number | Internal number as used in the spot. Starts counting at 1. For smart antennas we are probably going to have a longer unique number. Or shall we have a seperate serial_number field? |
+| report_location | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | By default null, may be set to a valid `location_id` |
 
 You also don't add a label or location here as well. You can define it in the location that the antenna might report to.
 
@@ -150,13 +155,16 @@ These concepts allow you to use the Intellifi Spots in a lot of situations. You 
 
 A default location for an Intellifi Spot is automatically created when you connect it to the server for the fist time. You may edit or remove this location. All connected antennas are automatically created as well, they are not configured to a location by default. The overal spot will report for them.
 
-* location_id
-* label
-* hold_time_s (how long should an item be present at this location?)
-* x, y
-* picture
-* building_map (only when you are defining an overlapping location)
-* report_location: The location that this locaton reports to, null by default. In a way it's a parent location.
+| Field | Data type | Description | 
+| ----- | --------- | ----------- |
+| location_id | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | The unique resource identifier. |
+| label | string | How do you name this resource? Or how do you refer to it in your own applicaton?
+| hold_time_s | number | How long should an item be kept present at this location? |
+| report_location | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to location that this locaton reports to, null by default. In a way it's a parent location. |
+
+Idears:
+* x, y coordinates so that you can draw a map of locations.
+* picture of a location.
 
 Presences
 ---------
@@ -181,13 +189,14 @@ The returned value depends on the configured signal levels.
 
 > It's possible to adjust these levels to your situation, please refer to the detailed Intellifi spot documentation if you would like to do this.
 
-Current fields:
-* presence_id
-* item_id: Which item was detected.
-* location_id: Which location created this presence.
-* proximity: Strongest proximity of all 'child' presences (elaborate later).
-* time_started
-* time_last
+| Field | Data type | Description | 
+| ----- | --------- | ----------- |
+| presence_id | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Resource identifier |
+| item | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to the item that was detected |
+| location | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to the locaton that this item was seen on. |
+| proximity | string | Strongest proximity of all 'child' presences (elaborate later). |
+| time_started | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was the first hit received for this presence? |
+| time_last | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was the last edit in this presence resource? |
 
 Perhaps later:
 * parent: parent id of presence.
@@ -202,11 +211,15 @@ Events
 The events resource keeps a copy of all events that occured. This is an exact copy of the events that are avaialble on the message bus. Please note that lots of events are flowing through the system. The history of events is kept for a limited time. If you would like to retreive all events then you should consider connecting to our message bus through one of the avaialble [push technologies](https://github.com/intellifi-nl/doc-push).
 
 Every event is envelopped in an JSON object with the following fields:
-* resource: One of the strings that we defined in the resources chapter. i.e. spots
-* id: A valid id for the resource that you choose. i.e. 203
-* action: A string that indicates the action that was executed. In most cases it's a verb. i.e. connect
-* object: A JSON object with extra information about the event, or the actual resource if something changed.
-* time: An event always takes place at a fixed time.
+
+| Field | Data type | Description | 
+| ----- | --------- | ----------- |
+| event_id | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique id of resource |
+| resource | string | One of the [resources](#resource) that we define in this document (i.e. spots, items). |
+| resource_id | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | A valid id for the resource that you choose. |
+| event | string | Indicates the event that was executed. In most cases it's a verb. i.e. connect |
+| time | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | An event always takes place at a fixed time. |
+| payload | object | A JSON object with extra information about the event, or the actual resource if something changed. |
 
 Pagination
 ==========
