@@ -75,8 +75,8 @@ Every item contains at least a unique id (`item_id`), the detected `code` and th
 
 An item will also contain the current (`location_now`) and last known location (`location_now`) of an item. This is the output of the localisation service. The `location_now` will be set to null when item is not actively detected, `location_last` will keep the last known location for as long as the item exists. In most use cases these 2 small fields will just tell you all the things that you want to know: Where is my item? Or where has it been seen for the last time?
 
-| Field | Data type | Description |
-| ----- | --------- | ----------- |
+| Field | Type | Description |
+| ----- | ---- | ----------- |
 | `item_id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for this item. |
 | `code` | string | String representation of the unique code that this item transmits. By default this is a hexadecimal representation. These number can be so long (> 40 bytes!) that a decimal representation would be useless to generate.
 | `codetype_mask`  | number | Bitwise number that allows you to identify the kind of technology that was detected. |
@@ -106,8 +106,8 @@ The Intellifi Spots form the eyes and the ears of the server logic. They generat
 
 Every spot has it's own representation inside the spots resource. This allows you to see and monitor the current status of a spot. You can also configure the location that the spot reports it's detections to.
 
-| Field | Data type | Description | 
-| ----- | --------- | ----------- |
+| Field | Type | Description | 
+| ----- | ---- | ----------- |
 | `spot_id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier as used in the database. |
 | `serial_number` | number | This is the fixed and unqiue spot id, as used in the embedded device. |
 | `is_online` | boolean | True when the spot is active and capable of sending events. |
@@ -130,8 +130,8 @@ Antennas
 
 All Intellifi Spots contains one or more antennas, you may also connect external antennas to a Spot. You can use this resource to query all available antennas in your system. You may let a single antenna report to location. Doing so effectively defines an extra zone, or virtual spot.
 
-| Field | Data type | Description | 
-| ----- | --------- | ----------- |
+| Field | Type | Description | 
+| ----- | ---- | ----------- |
 | `antenna_id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | The unique id of the antenna. |
 | `spot` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | To which Spot is the antenna connected? |
 | `antenna_number` | number | Internal number as used in the spot. Starts counting at 1. For smart antennas we are probably going to have a longer unique number. Or shall we have a seperate serial_number field? |
@@ -157,8 +157,8 @@ These concepts allow you to use the Intellifi Spots in a lot of situations. You 
 
 A default location for an Intellifi Spot is automatically created when you connect it to the server for the fist time. You may edit or remove this location. All connected antennas are automatically created as well, they are not configured to a location by default. The overal spot will report for them.
 
-| Field | Data type | Description | 
-| ----- | --------- | ----------- |
+| Field | Type | Description | 
+| ----- | ---- | ----------- |
 | `location_id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | The unique resource identifier. |
 | `label` | string | How do you name this resource? Or how do you refer to it in your own applicaton?
 | `hold_time_s` | number | How long should an item be kept present at this location? |
@@ -185,8 +185,8 @@ Presence are deleted when their hold time expires, or in other words: when they 
 
 The presence contains these fields:
 
-| Field | Data type | Description | 
-| ----- | --------- | ----------- |
+| Field | Type | Description | 
+| ----- | ---- | ----------- |
 | `presence_id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Resource identifier |
 | `item` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to the item that was detected |
 | `location` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to the locaton that this item was seen on. |
@@ -216,8 +216,8 @@ The events resource keeps a copy of all events that occured. This is an exact co
 
 Every event is envelopped in an JSON object with the following fields:
 
-| Field | Data type | Description | 
-| ----- | --------- | ----------- |
+| Field | Type | Description | 
+| ----- | ---- | ----------- |
 | `event_id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique id of resource |
 | `resource` | string | One of the [resources](#resource) that we define in this document (i.e. spots, items). |
 | `resource_id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | A valid id for the resource that you choose. |
