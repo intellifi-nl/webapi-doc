@@ -173,32 +173,33 @@ An item can be present on a location. A presence resource is automatically creat
 
 An item can be present on multiple locatons at the same time. This is caused by two main reasons:
 
-1. The used technolgys all have a big range. Your items may be picked up by multiple devices at the same moment. In this resource we present all this information to you.
+1. The used technolgies all have a big range. Your items may be picked up by multiple devices at the same moment. In this resource we present all this information to you.
 2. You may define locatons that are triggered by another location. I.e. Your 'office room 3' and 'hall' locaton could both report to your overall 'office building' location. It's logical that you can be present in 'office room 3' and in your 'office building' at the same time.
 
 If you just only want to know where something is excatly located then we have good news: we already did the hard work for you. The localisation service does a best fit and determines where your item is. The calculated location is directly saved within the [items](#items) resource. You don't need to query this resource in that situation. This resource reveals more of wat is happening inside the system. For some use cases this is really usefull.
 
 Presence are deleted when their hold time expires, or in other words: when they have not been seen for a some time. This is an important difference to the first API version that we had. You can use the [events resource](#events) to query all events that took place in the system. Including create, update and delete events for presences. So you can always reconstruct the presences that where avaialble at some time. Please let us know if it would make you happy that we did this for you.
 
-We add a estimated proximity to every presence. This is a rough estimate on the distance from the item to the receiver. 3 possible values are returned:
-
-1. far: the item is detected, but the received signal is weak. In most cases this means that the item is far away, but it also might indicate that you have interference or a seriously low battery.
-2. near: the item is detected with an average signal strength.
-3. immediate: the item is detected with a very strong signal. It must be very close to your antenna.
-The returned value depends on the configured signal levels. 
-
-> It's possible to adjust these levels to your situation, please refer to the detailed Intellifi spot documentation if you would like to do this.
+The presence contains these fields:
 
 | Field | Data type | Description | 
 | ----- | --------- | ----------- |
 | presence_id | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Resource identifier |
 | item | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to the item that was detected |
 | location | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to the locaton that this item was seen on. |
-| proximity | string | Strongest proximity of all 'child' presences (elaborate later). |
+| proximity | string | Strongest proximity of all 'child' presences, see next paragraph. |
 | time_started | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was the first hit received for this presence? |
 | time_last | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was the last edit in this presence resource? |
 
-Perhaps later:
+We add a estimated proximity to every presence. This is a rough estimate on the distance from the item to the receiver. 3 possible values are returned:
+
+1. 'far': the item is detected, but the received signal is weak. In most cases this means that the item is far away, but it also might indicate that you have interference or a seriously low battery.
+2. 'near': the item is detected with an average signal strength.
+3. 'immediate': the item is detected with a very strong signal. It must be very close to your antenna.
+
+The returned value depends on the configured signal levels. It's possible to adjust these levels to your situation, please refer to the detailed Intellifi spot documentation if you would like to do this.
+
+Idears for extra fields:
 * parent: parent id of presence.
 * children: ids of all children that 'feed' this presence. Should this also include spots or antennas?
 * url_parent: Direct link so that you can explore.
