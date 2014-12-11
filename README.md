@@ -222,7 +222,9 @@ Every event is envelopped in an JSON object with the following fields:
 | `time_event` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When did this event actually took place on the device? This is the device it's own timestamp. Could be different due to buffering and clock differences. |
 | `payload` | object | A JSON object with extra information about the event, or the actual resource if something changed. |
 
-'resource-type', 'resource' id and 'action' directly match the [topic format](https://github.com/intellifi-nl/doc-push/blob/master/mqtt_topics.md#format) that is described in the push documentation.
+All the event resources have been published on the message bus at some time. You might be wondering where the `topic` field went. It's actually parsed into the `resource-type`, `resource` id and `action` fields. You can find more information in the  [topic format](https://github.com/intellifi-nl/doc-push/blob/master/mqtt_topics.md#format) that is described in the push documentation. 
+
+Be carefull with the given `time` and `time_event` fields. Intellifi Spots can buffer events in the case of a network loss (a very small number for the moment). If you are traversing over the resource then you should look at `time`, eventual old events that pop up will just be in your result. If you are actually doing something with the event then you should look at `time_event`!
 
 Idears:
 * Add url to location change event of previous change. So that we can walk through the location updates. You could also request them by the right query. Perhaps we should also include that at a place?
