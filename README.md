@@ -81,6 +81,7 @@ An item will also contain the current (`location_now`) and last known location (
 | `location_last` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Almost the same as `location_now`. Is **not** configured to null when object is not detected anymore. |
 | `last_location_event` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to the last event that updated the location. We should also add url field to this so that you can follow it. |
 | `time` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was this resource created? |
+| `time_last` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was this resource updated for the last time? Can be a location update or a label update. At some point we will add an option that can delete items that have not been updated for a to long time... |
 
 The `codetype_mask` field allows you identify the kind of technology that was used to detect the tag.
 It's a bitwise number because multiple technologies can be used at the same time: i.e. A Bluetooth LE transponder may be an iBeacon. A bitwise field required you to sum the individual values, so in case of an iBeacon you sum Bluetooth LE transponder (2) and iBeacon (4). The value would be 2 + 4 = 6.
