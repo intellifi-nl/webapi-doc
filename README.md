@@ -69,12 +69,12 @@ The items resource will contain all [item](#item) objects that where detected by
 
 Every item contains at least a unique id (`item_id`), the detected `code` and the `codetype_mask`. You may add a `label` and an `image` to the item. The `item_id` is the reference to the item that is used in all other places in the system.
 
-An item will also contain the current (`location_now`) and last known location (`location_now`) of an item. This is the output of the localisation service. The `location_now` will be set to null when item is not actively detected, `location_last` will keep the last known location for as long as the item exists. In most use cases these 2 small fields will just tell you all the things that you want to know: Where is my item? Or where has it been seen for the last time?
+An item will also contain the current (`location_now`) and last known location (`location_now`) of an item. This is the output of the localisation service. The `location_now` will be set to null when item is not actively detected, `location_last` will keep the last known location for as long as the item exists. In most use cases these 2 small fields will just tell you all the things that you want to know: Where is my item (`location_now`)? Or where has it been seen for the last time (`location_last`)?
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | `item_id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
-| `code` | string | String representation of the unique code that this item transmits. By default this is a hexadecimal representation. These number can be so long (> 40 bytes!) that a decimal representation would be useless to generate.
+| `code` | string | String representation of the unique code that this item transmits. By default this is a hexadecimal representation. This number can be so long (> 40 bytes!) that a decimal representation would be useless to generate.
 | `codetype_mask`  | number | Bitwise number that allows you to identify the kind of technology that was detected. |
 | `label`| string | A name or a label for this item. You may add a number or id for your own system. |
 | `location_now` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to a [location](#locations) if the item as actively detected on some place. Null when the item is not beeing detected. |
@@ -99,7 +99,7 @@ Idears:
 Spots
 -----
 
-The Intellifi Spots form the eyes and the ears of the server logic. They generate events for every item that is detected. By doing so they 'implement' the earlier described [zone](#zone) abstraction. 
+The Intellifi Spot devices form the eyes and the ears of the server logic. They generate events for every item that is detected. By doing so they 'implement' the earlier described [zone](#zone) abstraction. 
 
 Every spot has it's own representation inside the spots resource. This allows you to see and monitor the current status of a spot. You can also configure the location that the spot reports it's detections to.
 
@@ -125,7 +125,7 @@ We will include a way to authenticate a spot in the future. This is a critical f
 Antennas
 --------
 
-All Intellifi Spots contains one or more antennas, you may also connect external antennas to a Spot. You can use this resource to query all available antennas in your system. You may let a single antenna report to location. Doing so effectively defines an extra zone, or virtual spot.
+All Intellifi Spots contains one or more antennas, you can even connect external antennas. This resource can be used to query all available antennas in your system. You may let a single antenna report to location. Doing so effectively defines an extra zone, or virtual spot.
 
 | Field | Type | Description | 
 | ----- | ---- | ----------- |
@@ -235,7 +235,7 @@ Idears:
 Design
 ======
 
-Import API design decisions are described in this chapter. You will find out why we do some things.
+API design decisions are described in this chapter. It may answer some questions that you have.
 
 Explorability
 -------------
