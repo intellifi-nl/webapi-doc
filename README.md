@@ -106,6 +106,7 @@ Every spot has it's own representation inside the spots resource. This allows yo
 | Field | Type | Description | 
 | ----- | ---- | ----------- |
 | `spot_id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
+| `report_location` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to location resource that this overall spot reports it's detection to. You may set this to null if you don't want the spot to report overall presences. |
 | `serial_number` | number | This is the fixed and unqiue spot id, as used in the embedded device. |
 | `is_online` | boolean | True when the spot is active and capable of sending events. |
 | `state` | string | The current state of the spot. |
@@ -114,7 +115,6 @@ Every spot has it's own representation inside the spots resource. This allows yo
 | `time_last_request` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | The timestamp of the last received HTTP request to this server |
 | `received_spot_object` | object | An object with specific information about the spot, directly send by the spot itself when the connection is created. |
 | `received_spot_config` | object | An object with the current spot configuraton, also directly sned by the spot itself when the connection is created. |
-| `report_location` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to location resource that this overall spot reports it's detection to. You may set this to null if you don't want the spot to report overall presences. |
 
 You can't add a label or a note to the spot. This is by design. We gave the seperate [location resource](#locations) responsibility for labels and notes.
 
@@ -131,8 +131,8 @@ All Intellifi Spots contains one or more antennas, you can even connect external
 | ----- | ---- | ----------- |
 | `antenna_id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
 | `spot` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | To which Spot is the antenna connected? |
-| `antenna_number` | number | Internal number as used in the spot. Starts counting at 1. For smart antennas we are probably going to have a longer unique number. Or shall we have a seperate serial_number field? |
 | `report_location` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | By default null, may be set to a valid `location_id` |
+| `antenna_number` | number | Internal number as used in the spot. Starts counting at 1. For smart antennas we are probably going to have a longer unique number. Or shall we have a seperate serial_number field? |
 | `time` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | The time that this resource was created. |
 
 You also don't add a label or location here as well. You can define it in the location that the antenna might report to.
@@ -157,9 +157,9 @@ A default location for an Intellifi Spot is automatically created when you conne
 | Field | Type | Description | 
 | ----- | ---- | ----------- |
 | `location_id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
+| `report_location` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to location that this locaton reports to, null by default. In a way it's a parent location. |
 | `label` | string | How do you name this resource? Or how do you refer to it in your own applicaton?
 | `hold_time_s` | number | How long should an item be kept present at this location? |
-| `report_location` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to location that this locaton reports to, null by default. In a way it's a parent location. |
 | `time` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | The time that this resource was created. |
 
 Idears:
@@ -220,13 +220,12 @@ Every event is envelopped in an JSON object with the following fields:
 | `resource_type` | string | One of the defined [resources](#resource). Is also written in it's plural form. I.e. 'spots', 'items'. |
 | `action` | string | Indicates the kind of event that was executed. In most cases it's a verb. I.e. 'connect', 'create' etc. |
 | `time` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was this event resource created at the server? |
-| `time_event` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When did this event actually took place on the device? This is the device it's own timestamp. Could be different due to buffering and clock differences. |
-| `encoding` | string | What can you expect in the payload? 'json' (object), 'utf8' (string), 'base64' (string) or 'null' (null). For all normal events you can expect 'json' or 'null'. |
-| `payload` | see `encoding` | A value with extra information about the event. |
+| `time_device` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When did this event actually took place on the device? This is the device it's own timestamp. Could be different due to buffering and clock differences. |
+| `payload` | object | An object that contains the used encoding and the actual payload (if any). We will try to get this in line with the websockets output. Possible encodings: 'json', 'utf8' or 'base64'. We might add 'null', for now it's just an empty utf8 string if nothing was send.  |
 
 All the event resources have been published on the message bus at some time. You might be wondering where the `topic` field went. It's actually parsed into the `resource-type`, `resource` id and `action` fields. You can find more information in the  [topic format](https://github.com/intellifi-nl/doc-push/blob/master/mqtt_topics.md#format) that is described in the push documentation. 
 
-Be carefull with the given `time` and `time_event` fields. Intellifi Spots can buffer events in the case of a network loss (a very small number for the moment). If you are traversing over the resource then you should look at `time`, eventual old events that pop up will just be in your result. If you are actually doing something with the event then you should look at `time_event`!
+Be carefull with the given `time` and `time_device` fields. Intellifi Spots can buffer events in the case of a network loss (a very small number for the moment). If you are traversing over the resource then you should look at `time`, eventual old events that pop up will just be in your result. If you are actually doing something with the event then you should look at `time_device`!
 
 Idears:
 * Add url to location change event of previous change. So that we can walk through the location updates. You could also request them by the right query. Perhaps we should also include that at a place?
