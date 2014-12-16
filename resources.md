@@ -1,7 +1,7 @@
 Resources
 =========
 
-This document gives a detailed description of the avaialble resources. You can find an overview description in the [Brain web API documentation][README.md].
+This document gives a detailed description of the avaialble resources. You can find an overview description in the [Brain web API documentation](README.md).
 
 Contents
 --------
