@@ -73,15 +73,15 @@ An item will also contain the current (`location_now`) and last known location (
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| `item_id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
+| `id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
 | `code` | string | String representation of the unique code that this item transmits. By default this is a hexadecimal representation. This number can be so long (> 40 bytes!) that a decimal representation would be useless to generate.
 | `codetype_mask`  | number | Bitwise number that allows you to identify the kind of technology that was detected. |
 | `label`| string | A name or a label for this item. You may add a number or id for your own system. |
 | `location_now` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to a [location](#locations) if the item as actively detected on some place. Null when the item is not beeing detected. |
 | `location_last` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Almost the same as `location_now`. Is **not** configured to null when object is not detected anymore. |
 | `last_location_event` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to the last event that updated the location. We should also add url field to this so that you can follow it. |
-| `time` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was this resource created? |
-| `time_last` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was this resource updated for the last time? Can be a location update or a label update. At some point we will add an option that can delete items that have not been updated for a to long time... |
+| `time_create` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was this resource created? |
+| `time_update` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was this resource updated for the last time? Can be a location update or a label update. At some point we will add an option that can delete items that have not been updated for a to long time... |
 
 The `codetype_mask` field allows you identify the kind of technology that was used to detect the tag.
 It's a bitwise number because multiple technologies can be used at the same time: i.e. A Bluetooth LE transponder may be an iBeacon. A bitwise field required you to sum the individual values, so in case of an iBeacon you sum Bluetooth LE transponder (2) and iBeacon (4). The value would be 2 + 4 = 6.
@@ -105,16 +105,17 @@ Every spot has it's own representation inside the spots resource. This allows yo
 
 | Field | Type | Description | 
 | ----- | ---- | ----------- |
-| `spot_id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
+| `id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
 | `report_location` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to location resource that this overall spot reports it's detection to. You may set this to null if you don't want the spot to report overall presences. |
 | `serial_number` | number | This is the fixed and unqiue spot id, as used in the embedded device. |
 | `is_online` | boolean | True when the spot is active and capable of sending events. |
 | `state` | string | The current state of the spot. |
 | `request_counter` | number | The total number of HTTP requests that the spot has done |
-| `time` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | The time that this resource was created. The timestamp of the first HTTP request to this server. |
 | `time_last_request` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | The timestamp of the last received HTTP request to this server |
 | `received_spot_object` | object | An object with specific information about the spot, directly send by the spot itself when the connection is created. |
 | `received_spot_config` | object | An object with the current spot configuraton, also directly sned by the spot itself when the connection is created. |
+| `time_create` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | The time that this resource was created. The timestamp of the first HTTP request to this server. |
+| `time_update` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was the last change in this resource? Is not updated by the request_counter, you can use time_last_request to see that. |
 
 You can't add a label or a note to the spot. This is by design. We gave the seperate [location resource](#locations) responsibility for labels and notes.
 
@@ -129,11 +130,12 @@ All Intellifi Spots contains one or more antennas, you can even connect external
 
 | Field | Type | Description | 
 | ----- | ---- | ----------- |
-| `antenna_id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
+| `id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
 | `spot` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | To which Spot is the antenna connected? |
 | `report_location` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | By default null, may be set to a valid `location_id` |
 | `antenna_number` | number | Internal number as used in the spot. Starts counting at 1. For smart antennas we are probably going to have a longer unique number. Or shall we have a seperate serial_number field? |
-| `time` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | The time that this resource was created. |
+| `time_create` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | The time that this resource was created. |
+| `time_update` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was the last change in this resource? |
 
 You also don't add a label or location here as well. You can define it in the location that the antenna might report to.
 
@@ -156,11 +158,12 @@ A default location for an Intellifi Spot is automatically created when you conne
 
 | Field | Type | Description | 
 | ----- | ---- | ----------- |
-| `location_id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
+| `id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
 | `report_location` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to location that this locaton reports to, null by default. In a way it's a parent location. |
 | `label` | string | How do you name this resource? Or how do you refer to it in your own applicaton?
 | `hold_time_s` | number | How long should an item be kept present at this location? |
-| `time` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | The time that this resource was created. |
+| `time_create` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | The time that this resource was created. |
+| `time_update` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was the last change in this resource? |
 
 Idears:
 * x, y coordinates so that you can draw a map of locations.
@@ -184,12 +187,12 @@ The presence contains these fields:
 
 | Field | Type | Description | 
 | ----- | ---- | ----------- |
-| `presence_id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
+| `id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
 | `item` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to the item that was detected |
 | `location` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to the locaton that this item was seen on. |
 | `proximity` | string | Strongest proximity of all 'child' presences, see next paragraph. |
-| `time` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | Created time, when was the first hit received for this presence? |
-| `time_last` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was the last edit in this presence resource? |
+| `time_create` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | Created time, when was the first hit received for this presence? |
+| `time_update` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was the last edit in this presence resource? |
 
 We add a estimated proximity to every presence. This is a rough estimate on the distance from the item to the receiver. 3 possible values are returned:
 
@@ -215,17 +218,19 @@ Every event is envelopped in an JSON object with the following fields:
 
 | Field | Type | Description | 
 | ----- | ---- | ----------- |
-| `event_id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
+| `id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
 | `resource` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to id of one of the existing resources. |
 | `resource_type` | string | One of the defined [resources](#resource). Is also written in it's plural form. I.e. 'spots', 'items'. |
 | `action` | string | Indicates the kind of event that was executed. In most cases it's a verb. I.e. 'connect', 'create' etc. |
-| `time` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was this event resource created at the server? |
+| `time_create` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was this event resource created at the server? |
 | `time_device` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When did this event actually took place on the device? This is the device it's own timestamp. Could be different due to buffering and clock differences. |
 | `payload` | object | An object that contains the used encoding and the actual payload (if any). We will try to get this in line with the websockets output. Possible encodings: 'json', 'utf8' or 'base64'. We might add 'null', for now it's just an empty utf8 string if nothing was send.  |
 
 All the event resources have been published on the message bus at some time. You might be wondering where the `topic` field went. It's actually parsed into the `resource-type`, `resource` id and `action` fields. You can find more information in the  [topic format](https://github.com/intellifi-nl/doc-push/blob/master/mqtt_topics.md#format) that is described in the push documentation. 
 
-Be carefull with the given `time` and `time_device` fields. Intellifi Spots can buffer events in the case of a network loss (a very small number for the moment). If you are traversing over the resource then you should look at `time`, eventual old events that pop up will just be in your result. If you are actually doing something with the event then you should look at `time_device`!
+Be carefull with the given `time_create` and `time_device` fields. Intellifi Spots can buffer events in the case of a network loss (a very small number for the moment). If you are traversing over the resource then you should look at `time_create`, eventual old events that pop up will just be in your result. If you are actually doing something with the event then you should look at `time_device`!
+
+An event is never changed (can't be by definition!), so we don't offer a `time_update` field on this resource.
 
 Idears:
 * Add url to location change event of previous change. So that we can walk through the location updates. You could also request them by the right query. Perhaps we should also include that at a place?
@@ -243,10 +248,22 @@ We find it very important that our web API is self explaining. We strongly recom
 
 Most of the resources include links to other relevant resources. These links are added as fields to the JSON objects. A good JSON viewer will allow you to follow them with a simple click. These fields always have the "url_" prefix.
 
+Id
+--
+
+Every resource has an unique identiefer (ID). By default we embed this id into the first given field: `url`. You may add the `id_only` = true parameter to the query part of the url if you wish to have this id as a single field. The `url` field is then replaced by the `id` field. This also applies to references to other resources. You will probably want to do this in integrations only, for exploring the API it's way easier to just use the `url` field.
+
+
+Expand
+------
+
+You may add the `expand` = level option to the query part of the url. This option allows you to expand references with their actual object. So that you don't need to do the seperate query anymore. This is not yet implemented.
+
+
 Authentication
 --------------
 
-API keys, users etc.
+TODO: API keys, users etc.
 
 Pagination
 ----------
@@ -260,8 +277,7 @@ The number of results is always limited to 100. Obviously we do allow you to mak
 Versioning
 ----------
 
-/always the latest versions?
-/v2/?
+TODO: /always the latest versions, /v2, /v1
 
 Todos
 -----
@@ -269,7 +285,11 @@ Todos
 * CORS
 * Explain time format and link to iso.
 * https is not yet supported.
-* expand for releations.
+* expand for items themself, and their relations! By default only the items, you can request expands for seperate things?
 * option for extra navigational url's?
 * Time, UTC only on our side. Presentation layer can add a timezone.
 * Move the resources to a seperate page and give only an overview on this page.
+* The first returned JSON field is always an URL to the current resource or query, the second is always the id if you are working with a resource.
+* url_spot
+* id_spot
+* This is nice, we could also choose to disable 
