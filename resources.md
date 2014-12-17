@@ -30,7 +30,7 @@ An item will also contain the current (`location_now`) and last known location (
 | ----- | ---- | ----------- |
 | `id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
 | `code` | string | String representation of the unique code that this item transmits. By default this is a hexadecimal representation. This number can be so long (> 40 bytes!) that a decimal representation would be useless to generate.
-| `codetype_mask`  | number | Bitwise number that allows you to identify the kind of technology that was detected. |
+| `codetype`  | string | Type of technology that was used to detect this item. Can be 'EPC Gen2', 'Bluetooth LE' or 'iBeacon'. |
 | `label`| string | A name or a label for this item. You may add a number or id for your own system. |
 | `location_now` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to a [location](#locations) if the item as actively detected on some place. Null when the item is not beeing detected. |
 | `location_last` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Almost the same as `location_now`. Is **not** configured to null when object is not detected anymore. |
@@ -38,16 +38,11 @@ An item will also contain the current (`location_now`) and last known location (
 | `time_create` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was this resource created? |
 | `time_update` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was this resource updated for the last time? Can be a location update or a label update. At some point we will add an option that can delete items that have not been updated for a to long time... |
 
-The `codetype_mask` field allows you identify the kind of technology that was used to detect the tag.
-It's a bitwise number because multiple technologies can be used at the same time: i.e. A Bluetooth LE transponder may be an iBeacon. A bitwise field required you to sum the individual values, so in case of an iBeacon you sum Bluetooth LE transponder (2) and iBeacon (4). The value would be 2 + 4 = 6.
-
-* 1 RFID tag (EPC Gen2)
-* 2 Bluetooth LE transponder: indicates that you shall have attributes to read full PDU and MAC address.
-* 4 [iBeacon](http://en.wikipedia.org/wiki/IBeacon): indicates that you shall have UUID, major and minor.
+The `codetype` always contains a single string to keep things simple. It's important to state that an [iBeacon](http://en.wikipedia.org/wiki/IBeacon) is a Bluetooth LE transponder as well. We always show the most specific type in this field. Also for eventual future technologies that may follow.
 
 You may be worried about the amount of items that could flow into your system. In the future you can configure the spots to only allow certain code ranges with the flexible item sets approach. With this approach you can filter the amount of tags that come into your system. It will also become possible to 'drop' items after a certain amount of time (off course this shall only apply to items that you didn't edit).
 
-Idears:
+Ideas:
 * `image` field: so that you can save an optional picture with an item. Could be handy for simple front end app without own storage.
 * Add extra timestamp with the last time that the location was updated. Could be handy to see changes in your warehouse.
 
@@ -120,7 +115,7 @@ A default location for an Intellifi Spot is automatically created when you conne
 | `time_create` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | The time that this resource was created. |
 | `time_update` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was the last change in this resource? |
 
-Idears:
+Ideas:
 * x, y coordinates so that you can draw a map of locations.
 * picture of a location.
 
@@ -157,7 +152,7 @@ We add a estimated proximity to every presence. This is a rough estimate on the 
 
 The returned value depends on the configured signal levels. It's possible to adjust these levels to your situation, please refer to the detailed Intellifi spot documentation if you would like to do this.
 
-Idears for extra fields:
+Ideas for extra fields:
 * parent: parent id of presence.
 * children: ids of all children that 'feed' this presence. Should this also include spots or antennas?
 * url_parent: Direct link so that you can explore.
@@ -188,6 +183,6 @@ Be carefull with the given `time_create` and `time_device` fields. Intellifi Spo
 
 An event is never changed (can't be by definition!), so we don't offer a `time_update` field on this resource.
 
-Idears:
+Ideas:
 * Add url to location change event of previous change. So that we can walk through the location updates. You could also request them by the right query. Perhaps we should also include that at a place?
 * It might be very handy to allow the end user to 'subscribe' this table with a set of topics. It limits system load and allows us to keep sensible events arround longer. Or should we move this to a seperate resource (filtered_events, subscribed_events)? For now we will just subscribe to all events.
