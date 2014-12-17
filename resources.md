@@ -171,17 +171,18 @@ The events resource keeps a copy of all events that occured. This is an exact co
 
 Every event is envelopped in an JSON object with the following fields:
 
-| Field | Type | Description | 
+| Field | Type | Description |
 | ----- | ---- | ----------- |
 | `id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
-| `resource` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to id of one of the existing resources. |
 | `resource_type` | string | One of the defined [resources](#resource). Is also written in it's plural form. I.e. 'spots', 'items'. |
+| `resource` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to one of the existing resources. |
+| `resource_id_short` | number | May be filled with a shorter identifying number (null when not filled). I.e. The spots resource always puts the spot `serial_number` into this field.
 | `action` | string | Indicates the kind of event that was executed. In most cases it's a verb. I.e. 'connect', 'create' etc. |
 | `time_create` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was this event resource created at the server? |
 | `time_device` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When did this event actually took place on the device? This is the device it's own timestamp. Could be different due to buffering and clock differences. |
 | `payload` | object | An object that contains the used encoding and the actual payload (if any). We will try to get this in line with the websockets output. Possible encodings: 'json', 'utf8' or 'base64'. We might add 'null', for now it's just an empty utf8 string if nothing was send.  |
 
-All the event resources have been published on the message bus at some time. You might be wondering where the `topic` field went. It's actually parsed into the `resource-type`, `resource` id and `action` fields. You can find more information in the  [topic format](https://github.com/intellifi-nl/doc-push/blob/master/mqtt_topics.md#format) that is described in the push documentation. 
+All the event resources have been published on the message bus at some time. You might be wondering where the `topic` field went. It's actually parsed into the `resource-type`, `resource`, `resource_id_short` (when applicable) and `action` fields. You can find more information in the  [topic format](https://github.com/intellifi-nl/doc-push/blob/master/mqtt_topics.md#format) that is described in the push documentation. 
 
 Be carefull with the given `time_create` and `time_device` fields. Intellifi Spots can buffer events in the case of a network loss (a very small number for the moment). If you are traversing over the resource then you should look at `time_create`, eventual old events that pop up will just be in your result. If you are actually doing something with the event then you should look at `time_device`!
 
