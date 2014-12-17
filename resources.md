@@ -177,7 +177,7 @@ Every event is envelopped in an JSON object with the following fields:
 | `resource_type` | string | One of the defined [resources](#resource). Is also written in it's plural form. I.e. 'spots', 'items'. |
 | `resource` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to one of the existing resources. |
 | `resource_id_short` | number | May be filled with a shorter identifying number (null when not filled). I.e. The spots resource always puts the spot `serial_number` into this field.
-| `action` | string | Indicates the kind of event that was executed. In most cases it's a verb. I.e. 'connect', 'create' etc. Multiple levels may be avaialble, they are seperated by a dot (AMQP style). A slash would not allow you to query on this field. |
+| `action` | string | Indicates the kind of event that was executed. In most cases it's a verb. I.e. 'connect', 'create' etc. Multiple levels may be avaialble, they are seperated by a dot (AMQP style).|
 | `time_create` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was this event resource created at the server? |
 | `time_device` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When did this event actually took place on the device? This is the device it's own timestamp. Could be different due to buffering and clock differences. |
 | `payload` | object | An object that contains the used encoding and the actual payload (if any). We will try to get this in line with the websockets output. Possible encodings: 'json', 'utf8' or 'base64'. We might add 'null', for now it's just an empty utf8 string if nothing was send.  |
