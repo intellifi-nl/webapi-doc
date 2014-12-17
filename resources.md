@@ -30,7 +30,7 @@ An item will also contain the current (`location_now`) and last known location (
 | ----- | ---- | ----------- |
 | `id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
 | `code` | string | String representation of the unique code that this item transmits. By default this is a hexadecimal representation. This number can be so long (> 40 bytes!) that a decimal representation would be useless to generate.
-| `codetype`  | string | Type of technology that was used to detect this item. Can be 'EPC Gen2', 'Bluetooth LE' or 'iBeacon'. |
+| `code_type`  | string | Type of technology that was used to detect this item. Can be 'EPC Gen2', 'Bluetooth LE' or 'iBeacon'. |
 | `label`| string | A name or a label for this item. You may add a number or id for your own system. |
 | `location_now` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to a [location](#locations) if the item as actively detected on some place. Null when the item is not beeing detected. |
 | `location_last` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Almost the same as `location_now`. Is **not** configured to null when object is not detected anymore. |
@@ -38,7 +38,7 @@ An item will also contain the current (`location_now`) and last known location (
 | `time_create` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was this resource created? |
 | `time_update` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was this resource updated for the last time? Can be a location update or a label update. At some point we will add an option that can delete items that have not been updated for a to long time... |
 
-The `codetype` always contains a single string to keep things simple. It's important to state that an [iBeacon](http://en.wikipedia.org/wiki/IBeacon) is a Bluetooth LE transponder as well. We always show the most specific type in this field. Also for eventual future technologies that may follow.
+The `code_type` always contains a single string to keep things simple. It's important to state that an [iBeacon](http://en.wikipedia.org/wiki/IBeacon) is a Bluetooth LE transponder as well. We always show the most specific type in this field.
 
 You may be worried about the amount of items that could flow into your system. In the future you can configure the spots to only allow certain code ranges with the flexible item sets approach. With this approach you can filter the amount of tags that come into your system. It will also become possible to 'drop' items after a certain amount of time (off course this shall only apply to items that you didn't edit).
 
