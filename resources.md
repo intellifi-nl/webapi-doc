@@ -24,7 +24,9 @@ The items resource will contain all [item](README.md#item) objects that where de
 
 Every item contains at least a unique id (`item_id`), the detected `code` and the `codetype_mask`. You may add a `label` and an `image` to the item. The `item_id` is the reference to the item that is used in all other places in the system.
 
-An item will also contain the current (`location_now`) and last known location (`location_now`) of an item. This is the output of the localisation service. The `location_now` will be set to null when item is not actively detected, `location_last` will keep the last known location for as long as the item exists. In most use cases these 2 small fields will just tell you all the things that you want to know: Where is my item (`location_now`)? Or where has it been seen for the last time (`location_last`)?
+The item is also a placeholder for the output of the localisation service. If the item is beeing detected on multiple places then we offer a most likely `location`, based on all avaialble information. The `location` only changes when the item moves to another place. If it moves out of reach then it sticks to the last known `location`. You can use `is_present` to see if the item is actively detected. We believe that this information is enough for most use cases, it just tells you where your items are.
+
+Every item has the following fields defined:
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
