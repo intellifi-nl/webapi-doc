@@ -29,7 +29,7 @@ Every item has the following fields defined:
 | `code_hex` | string | String representation of the unique code that this item transmits. By default this is a hexadecimal representation. This number could be so long (> 40 bytes!) that a decimal representation would be useless to generate.
 | `technology`  | string | Type of technology that was used to detect this item. Can be 'EPC Gen2' or 'Bluetooth LE'. |
 | `label`| string | A name or a label for this item. You may add a number or id for your own system. |
-| `is_present`| boolean | Is this item actively detected by the system at this moment? |
+| `is_present`| boolean | Is this item actively detected by the system at this moment? Please note that this function is not fully functional at this moment. |
 | `location` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to the [location](#locations) resource where the item is. Or, if the item is out of reach, the last known location. |
 | `time_create` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was this resource created? |
 | `time_update` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was this resource updated for the last time? Can be a location update or a label update. At some point we will add an option that can delete items that have not been updated for a to long time... |
@@ -50,13 +50,14 @@ Every spot has it's own representation inside the spots resource. This allows yo
 | ----- | ---- | ----------- |
 | `id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
 | `report_location` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to location resource that this overall spot reports it's detection to. You may set this to null if you don't want the spot to report overall presences. |
+| `antenna_report_locations` | object | You may configure this field to an object which couples individual antenna ports to locations. An example is given below. |
 | `serial_number` | number | This is the fixed and unqiue spot id, as used in the embedded device. |
 | `is_online` | boolean | True when the spot is active and capable of sending events. |
 | `state` | string | The current state of the spot. |
 | `request_counter` | number | The total number of HTTP requests that the spot has done |
 | `time_last_request` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | The timestamp of the last received HTTP request to this server |
 | `received_spot_object` | object | An object with specific information about the spot, directly send by the spot itself when the connection is created. |
-| `received_spot_config` | object | An object with the current spot configuraton, also directly sned by the spot itself when the connection is created. |
+| `received_spot_config` | object | An object with the current spot configuraton, also directly send by the spot itself when the connection is created. |
 | `time_create` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | The time that this resource was created. The timestamp of the first HTTP request to this server. |
 | `time_update` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was the last change in this resource? Is not updated by the request_counter, you can use time_last_request to see that. |
 
@@ -66,7 +67,30 @@ The spots are automatically added to this resource when they are connected to th
 
 We will include a way to authenticate a spot in the future. This is a critical feature to refrain people from abusing the openness of our system. At this moment we advise you to use production spots in a 'closed' network only. Please let us know if you are very eager to have this feature.
 
-All Intellifi Spots contains one or more antennas, you can even connect external antennas. This resource can be used to query all available antennas in your system. You may let a single antenna report to location. Doing so effectively defines an extra zone, or virtual spot.
+### Defining report locations
+
+Every spot can report it's presences to one location. You can also configure individual antennas to report to different locations (antenna presences). You may do an HTTP PUT with the following body to configure 4 individual antennas to report to some location. You have to supply the id's of the locations that you want to report to.
+
+{
+	"report_location": "54f97c3cc573f4a82099749f",
+	"antenna_report_locations":[
+        {"antenna_number":1, "report_location": "54f97c3cc573f4a82099749c"},
+        {"antenna_number":2, "report_location": "54f97c3cc573f4a82099749c"},
+        {"antenna_number":3, "report_location": "54f97c42c573f4a82099749d"},
+        {"antenna_number":4, "report_location": "54f97c42c573f4a82099749d"}
+	]
+}
+
+If you want to clear all report locations then you should send this JSON message:
+
+{
+	"report_location": "000000000000000000000000",
+	"antenna_report_locations": []
+}
+
+Please note that you should PUT "000000000000000000000000" instead of NULL when you want reset report_location. The antenna_report_locations should always contain an array (may be empty).
+
+Normally you would only have a filled `report_location` ór a filled `antenna_report_locations` field. If you supply both then items will become visible on multiple locations at the same time.
 
 Locations
 ---------
