@@ -1,20 +1,15 @@
 Resources
 =========
 
-This document gives a detailed description of the avaialble resources. You can find an overview description in the [Brain web API documentation](README.md).
+This document gives a detailed description of the available resources. You can find an overview description in the [Brain web API documentation](README.md).
 
 Contents
 --------
 
 * [Items](#items)
 * [Spots](#spots)
-* [Antennas](#antennas)
 * [Locations](#locations)
 * [Presences](#presences)
-* [Paths](#paths) (not yet)
-* [Passings](#passings) (not yet)
-* [Sets](#sets) (not yet)
-* [Senses](#senses) (not yet)
 * [Events](#events)  
 
 Items
@@ -22,7 +17,7 @@ Items
 
 The items resource will contain all [item](README.md#item) objects that where detected by one of the [zones](README.md#zone). They are automatically added as soon as they are are detected for the first time. The items resource couples a unique id to every item and gives a place to add more information to an item.
 
-Every item contains at least a unique id (`item_id`), the detected `code` and the `codetype_mask`. You may add a `label` and an `image` to the item. The `item_id` is the reference to the item that is used in all other places in the system.
+Every item contains at least a unique id (`id`), the detected `code` and the `codetype_mask`. You may add a `label` to the item. The `item_id` is the reference to the item that is used in all other places in the system.
 
 The item is also a placeholder for the output of the localisation service. If the item is beeing detected on multiple places then we offer a most likely `location`, based on all avaialble information. The `location` only changes when the item moves to another place. If it moves out of reach then it sticks to the last known `location`. You can use `is_present` to see if the item is actively detected. We believe that this information is enough for most use cases, it just tells you where your items are.
 
@@ -31,22 +26,18 @@ Every item has the following fields defined:
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | `id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
-| `code` | string | String representation of the unique code that this item transmits. By default this is a hexadecimal representation. This number can be so long (> 40 bytes!) that a decimal representation would be useless to generate.
-| `code_type`  | string | Type of technology that was used to detect this item. Can be 'EPC Gen2', 'Bluetooth LE' or 'iBeacon'. |
+| `code_hex` | string | String representation of the unique code that this item transmits. By default this is a hexadecimal representation. This number could be so long (> 40 bytes!) that a decimal representation would be useless to generate.
+| `technology`  | string | Type of technology that was used to detect this item. Can be 'EPC Gen2' or 'Bluetooth LE'. |
 | `label`| string | A name or a label for this item. You may add a number or id for your own system. |
 | `is_present`| boolean | Is this item actively detected by the system at this moment? |
 | `location` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to the [location](#locations) resource where the item is. Or, if the item is out of reach, the last known location. |
-| `last_location_event` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to the last event that updated the location. |
 | `time_create` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was this resource created? |
 | `time_update` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was this resource updated for the last time? Can be a location update or a label update. At some point we will add an option that can delete items that have not been updated for a to long time... |
 
-The `code_type` always contains a single string to keep things simple. It's important to state that an [iBeacon](http://en.wikipedia.org/wiki/IBeacon) is a Bluetooth LE transponder as well. We always show the most specific type in this field.
-
-You may be worried about the amount of items that could flow into your system. In the future you can configure the spots to only allow certain code ranges with the flexible item sets approach. With this approach you can filter the amount of tags that come into your system. It will also become possible to 'drop' items after a certain amount of time (off course this shall only apply to items that you didn't edit).
+You may be worried about the amount of items that could flow into your system. In the future you can configure the spots to only allow certain code ranges with the flexible item sets approach. With this approach you can filter the amount of tags that come into your system.
 
 Ideas:
 * `image` field: so that you can save an optional picture with an item. Could be handy for simple front end app without own storage.
-* Add extra timestamp with the last time that the location was updated. Could be handy to see changes in your warehouse.
 
 Spots
 -----
@@ -75,25 +66,7 @@ The spots are automatically added to this resource when they are connected to th
 
 We will include a way to authenticate a spot in the future. This is a critical feature to refrain people from abusing the openness of our system. At this moment we advise you to use production spots in a 'closed' network only. Please let us know if you are very eager to have this feature.
 
-Antennas
---------
-
 All Intellifi Spots contains one or more antennas, you can even connect external antennas. This resource can be used to query all available antennas in your system. You may let a single antenna report to location. Doing so effectively defines an extra zone, or virtual spot.
-
-| Field | Type | Description | 
-| ----- | ---- | ----------- |
-| `id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
-| `spot` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | To which Spot is the antenna connected? |
-| `report_location` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | By default null, may be set to a valid `location_id` |
-| `antenna_number` | number | Internal number as used in the spot. Starts counting at 1. For smart antennas we are probably going to have a longer unique number. Or shall we have a seperate serial_number field? |
-| `time_create` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | The time that this resource was created. |
-| `time_update` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was the last change in this resource? |
-
-You also don't add a label or location here as well. You can define it in the location that the antenna might report to.
-
-The antennas are created automatically when the spot is connected.
-
-You can edit this resource by posting your change to it (elaborate on this).
 
 Locations
 ---------
@@ -131,7 +104,7 @@ An item can be present on multiple locatons at the same time. This is caused by 
 1. The used technolgies all have a big range. Your items may be picked up by multiple devices at the same moment. In this resource we present all this information to you.
 2. You may define locatons that are triggered by another location. I.e. Your 'office room 3' and 'hall' locaton could both report to your overall 'office building' location. It's logical that you can be present in 'office room 3' and in your 'office building' at the same time.
 
-If you just only want to know where something is excatly located then we have good news: we already did the hard work for you. The localisation service does a best fit and determines where your item is. The calculated location is directly saved within the [items](#items) resource. You don't need to query this resource in that situation. This resource reveals more of wat is happening inside the system. For some use cases this is really usefull.
+If you just only want to know where something is excatly located then we have good news: we already did the hard work for you. The localisation service does a best fit and determines where your item is. The calculated location is directly saved within the [items](#items) resource. You don't need to query this resource in that situation. This resource reveals more of what is happening inside the system. For some use cases this is really usefull.
 
 Presence are deleted when their hold time expires, or in other words: when they have not been seen for a some time. This is an important difference to the first API version that we had. You can use the [events resource](#events) to query all events that took place in the system. Including create, update and delete events for presences. So you can always reconstruct the presences that where avaialble at some time. Please let us know if it would make you happy that we did this for you.
 
@@ -146,7 +119,7 @@ The presence contains these fields:
 | `time_create` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | Created time, when was the first hit received for this presence? |
 | `time_update` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was the last edit in this presence resource? |
 
-We add a estimated proximity to every presence. This is a rough estimate on the distance from the item to the receiver. 3 possible values are returned:
+We add an estimated proximity to every presence. This is a rough estimate on the distance from the item to the receiver. 3 possible values are returned:
 
 1. 'far': the item is detected, but the received signal is weak. In most cases this means that the item is far away, but it also might indicate that you have interference or a seriously low battery.
 2. 'near': the item is detected with an average signal strength.
@@ -188,3 +161,14 @@ An event is never changed (can't be by definition!), so we don't offer a `time_u
 Ideas:
 * Add url to location change event of previous change. So that we can walk through the location updates. You could also request them by the right query. Perhaps we should also include that at a place?
 * It might be very handy to allow the end user to 'subscribe' this table with a set of topics. It limits system load and allows us to keep sensible events arround longer. Or should we move this to a seperate resource (filtered_events, subscribed_events)? For now we will just subscribe to all events.
+
+Future resources
+----------------
+
+We are working hard on new features. Some of the new forseen features are already mentioned here as a sneak preview.
+
+* [Paths](#paths)
+* [Passings](#passings)
+* [Sets](#sets)
+* [Senses](#senses)
+
