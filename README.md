@@ -60,6 +60,51 @@ Overview
 
 TODO: Add a table with all available resources.
 
+Create and updating
+-------------------
+
+You can create and change most avaialble resources in the API. This can be done by sending an HTTP POST (for creating) or PUT (for updating). Your programming language will most likely have several options to achieve this. In this example we will use the wel known unix tool curl (also avaialble for windows). Many other tools are avaialble.
+
+We will first create a new location by running post:
+```
+curl -XPOST -H "Content-Type: application/json" --data @postBody.json http://`host`/api/locations
+```
+
+The body will be filled with the contents of the `postBody.json` file:
+```
+{
+  "key":"value",
+  "label":"My first! Yeah"
+}
+```
+
+Please note that you may add multiple key/value pairs in the object. Unknown values will be ignored.
+
+The reply to this POST will be another JSON object that contains information about the executed request. The most imporant is the url and the id of the newly created resource:
+```
+{
+  "updated_properties_count":2,
+  "url":"http://localhost:3000/api/locations/550052669dba59d03057cb74",
+  "id":"550052669dba59d03057cb74",
+}
+```
+
+More fields may be added in the future without further notice.
+
+We now want to change the value of the label to a more sensible value. Please note that you will have to add the id of the resource to your uri.
+```
+curl -XPUT -H "Content-Type: application/json" --data @putBody.json localhost:3000/api/locations/550052669dba59d03057cb74
+```
+
+The contents of the file `putBody.json`:
+```
+{
+  "label":"Kitchen"
+}
+```
+
+This will result in a reply similar to the POST command. Now the label is changed to Kitchen.
+
 Design
 ======
 
@@ -75,7 +120,7 @@ Most of the resources include links to other relevant resources. These links are
 Id
 --
 
-Every resource has an unique identiefer (ID). By default we embed this id into the first given field: `url`. You may add the `id_only` = true parameter to the query part of the url if you wish to have this id as a single field. The `url` field is then replaced by the `id` field. This also applies to references to other resources. You will probably want to do this in integrations only, for exploring the API it's way easier to just use the `url` field.
+Every resource has an unique identiefer (ID). By default we embed this id into the first given field: `url`. You may add the `id_only` = true parameter to the query part of the url if you wish to have this id as a single field. The `url` field is then replaced by the `id` field. This also applies to references to other resources. You will probably want to do this in integrations only, for exploring the API it's way easier to just keep and use the `url` field.
 
 
 Expand
