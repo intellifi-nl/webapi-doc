@@ -70,7 +70,7 @@ We will include a way to authenticate a spot in the future. This is a critical f
 ### Defining report locations
 
 Every spot can report it's presences to one location. You can also configure individual antennas to report to different locations (antenna presences). You may do an HTTP PUT with the following body to configure 4 individual antennas to report to some location. You have to supply the id's of the locations that you want to report to.
-
+```
 {
 	"report_location": "54f97c3cc573f4a82099749f",
 	"antenna_report_locations":[
@@ -80,15 +80,17 @@ Every spot can report it's presences to one location. You can also configure ind
         {"antenna_number":4, "report_location": "54f97c42c573f4a82099749d"}
 	]
 }
+```
 
 If you want to clear all report locations then you should send this JSON message:
-
+```
 {
 	"report_location": "000000000000000000000000",
 	"antenna_report_locations": []
 }
+```
 
-Please note that you should PUT "000000000000000000000000" instead of NULL when you want reset report_location. The antenna_report_locations should always contain an array (may be empty).
+Please note that you should PUT `"000000000000000000000000"` instead of NULL when you want reset report_location. The antenna_report_locations should always contain an array (may be empty).
 
 Normally you would only have a filled `report_location` ór a filled `antenna_report_locations` field. If you supply both then items will become visible on multiple locations at the same time.
 
