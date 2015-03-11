@@ -122,12 +122,14 @@ Id
 
 Every resource has an unique identiefer (ID). By default we embed this id into the first given field: `url`. You may add the `id_only` = true parameter to the query part of the url if you wish to have this id as a single field. The `url` field is then replaced by the `id` field. This also applies to references to other resources. You will probably want to do this in integrations only, for exploring the API it's way easier to just keep and use the `url` field.
 
+Reference
+---------
 
-Expand
-------
+Most resource contain fields that reference to another resource in the API. An item resource will be pointing to some location i.e. This reference is very important an can be represented in three ways:
 
-You may add the `expand` = level option to the query part of the url. This option allows you to expand references with their actual object. So that you don't need to do the seperate query anymore. This is not yet implemented.
-
+1. By default it's shown as an url. This helps you in navigating to it, if you have the right browser extension then you can just click it. The '_url' is postfixed to the field name. I.e. location becomes location_url. 
+2. If you add `id_only=true` in the query then only the id of the resource is shwon. The name of the field is postfixed with '_id'. I.e. location becomes location_id
+3. If you add `populate=fieldname,fieldname2,etc` in the query string then API will try to add the documents as an extra level in the results. The name of the field is not appended with a postfix in this case. If the lookup fails then `null` is returned as value.
 
 Authentication
 --------------
