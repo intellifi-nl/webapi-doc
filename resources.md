@@ -58,7 +58,7 @@ Every spot has it's own representation inside the spots resource. This allows yo
 | `time_last_request` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | The timestamp of the last received HTTP request to this server |
 | `received_spot_object` | object | An object with specific information about the spot, directly send by the spot itself when the connection is created. |
 | `received_config_object` | object | An object with the current spot configuraton, also directly send by the spot itself when the connection is created. |
-| `remote_sense` | object | Sense are values that in most cases are generated inside the spot (number of presences, spot booted etc.). Remote senses can be used to perform some action on the brain. See [update remote sense](#update-remote-sense) for more info.
+| `remote_senses` | object | Senses are values that in most cases are generated inside the spot (number of presences, spot booted etc.). Remote senses can be used to perform some action on the brain. See [update remote sense](#update-remote-sense) for more info.
 | `time_create` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | The time that this resource was created. The timestamp of the first HTTP request to this server. |
 | `time_update` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was the last change in this resource? Is not updated by the request_counter, you can use time_last_request to see that. |
 
@@ -96,18 +96,18 @@ Please note that you should PUT `"000000000000000000000000"` instead of NULL whe
 Normally you would only have a filled `report_location` ór a filled `antenna_report_locations` field. If you supply both then items will become visible on multiple locations at the same time.
 
 ### Update remote sense
-You can change a remote sense by sending a PUT request to the spot directly (api/spots/id). 5 remote sense are supported at this moment. bs1 to bs5 (where bs is short for brain sense). The remote sense are described in an object. If you perform a put then you 
+You can change a remote sense by sending a PUT request to the spot directly (api/spots/`id`). 5 remote sense are supported at this moment. bs1 to bs5 (where bs is short for brain sense). The remote sense are described in an object. Please note that any other key added to this object will be ignored at spot level.
 
-I.e. if you wanted to update the first 3 brain sense then you would PUT the following object:
+You only need to add the senses that you want to change. I.e. updating the first three senses is done by sending the following object: 
+```
 {
-	"remote_sense": {
+	"remote_senses": {
 		"bs1":24,
 		"bs2":1,
 		"bs3":0
 	}
 }
-
-Please note that any other key added to this object will be ignored!
+```
 
 Locations
 ---------
