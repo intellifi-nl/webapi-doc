@@ -14,13 +14,17 @@ As with every web API you can only request new information by doing another requ
 
 Contents
 --------
-* [Quick start](#quick start)
+* [Quick start](#quick-start)
+  * [Exploring](#exploring)
+  * [Postman](#postman)
 * [Terminology](#terminology)
   * [Item](#item)
   * [Zone](#zone)
 * [Resources](#resources)
   * [Overview](#overview)
-  * [Resource references](#references)
+  * [Id](#id)    
+  * [References](#references)  
+  * [Create and update](#create-and-update)
 * [Future](#future)
 
 Quick start
@@ -31,18 +35,20 @@ Exploring
 
 We find it very important that our web API is self explaining. We strongly recommand you to install a JSON viewer plugin in your webbrowser. This will allow you to view the query results in your web browser. For Google Chrome we advice you to use [JSONView](https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc). Without doubt there will be a nice plugin for your own personal browser as well.
 
-Most of the resources include links to other relevant resources. These links are added as fields to the JSON objects. A good JSON viewer will allow you to follow them with a simple click. These fields always have the "url_" prefix.
+![](https://raw.githubusercontent.com/intellifi-nl/doc-webapi/master/explore2.png)
 
-![]()
+Most of the resources include links to other relevant resources. These links are added as fields to the JSON objects. A good JSON viewer will allow you to follow them with a simple click.
 
 Postman
 -------
 
-For making changes on our web API we recommand you to use [Postman](https://www.getpostman.com/). It's an easy tool that allows you to create PUT and POST requests from within Chrome. We prepared a set with example url's that allows you to get started. You can use the import function of postman with this link to get the collection of url's: [https://www.getpostman.com/collections/0a807a8bcaa91900bf2a](https://www.getpostman.com/collections/0a807a8bcaa91900bf2a)
+For making changes on our web API we recommand you to use [Postman](https://www.getpostman.com/). It's an easy tool that allows you to create PUT and POST requests from within Chrome. We prepared a set with example url's that allows you to play arround.  You can use the import function of postman with this link to get the collection of url's: [https://www.getpostman.com/collections/0a807a8bcaa91900bf2a](https://www.getpostman.com/collections/0a807a8bcaa91900bf2a)
 
-![]()
+![](https://raw.githubusercontent.com/intellifi-nl/doc-webapi/master/postman.png)
 
-Off course you can also try to get it working with curl or even with your own programming environment.
+Please note that given example url's should be replaced by resources that actually exist. You can just copy and past them from your own brain.
+
+More information and some examples for curl can be found [below](#create-and-update).
 
 Terminology
 ===========
@@ -88,18 +94,18 @@ References
 Most resources contain one or more fields that reference to another resource in the API. I.e. An item resource will be pointing to some location. These references can be shown in three ways. Depending on the arguments that you supply in the query part of your request url.
 
 1. By default it's shown as an url. This helps you in navigating to it, if you have the right browser extension then you can just click it. The '_url' is postfixed to the field name. I.e. location becomes location_url.
-2. If you add `id_only=true` in the query then only the id of the resource is shwon. The name of the field is postfixed with '_id'. I.e. location becomes location_id
+![](https://raw.githubusercontent.com/intellifi-nl/doc-webapi/master/explore.png)
 
-![]()
+2. If you add `id_only=true` in the query then only the id of the resource is shwon. The name of the field is postfixed with '_id'. I.e. location becomes location_id
+![](https://raw.githubusercontent.com/intellifi-nl/doc-webapi/master/explore_idonly.png)
 
 3. If you add `populate=fieldname,fieldname2,etc` in the query string then the brain will try to add the documents as an extra level in the results. The name of the field is not appended with a postfix in this case. If the lookup fails then `null` is returned as value.
+![](https://raw.githubusercontent.com/intellifi-nl/doc-webapi/master/explore_populate.png)
 
-![]()
+Create and update
+-----------------
 
-Create and updating
--------------------
-
-You can create and change most avaialble resources in the API. This can be done by sending an HTTP POST (for creating) or PUT (for updating). Your programming language will most likely have several options to achieve this. In this example we will use the wel known unix tool curl (also avaialble for windows). Many other tools are avaialble.
+You can create and change most avaialble resources in the API. This can be done by sending an HTTP POST (for creating) or PUT (for updating). Your programming language will most likely have several options to achieve this. In this example we will use the wel known unix tool curl (also avaialble for windows).  Many other tools are avaialble.
 
 We will first create a new location by running post:
 ```
