@@ -42,7 +42,7 @@ Most of the resources include links to other relevant resources. These links are
 Postman
 -------
 
-For making changes on our web API we recommand you to use [Postman](https://www.getpostman.com/). It's an easy tool that allows you to create PUT and POST requests from within Chrome. We prepared a set with example url's that allows you to play arround.  You can use the import function of postman with this link to get the collection of url's: [https://www.getpostman.com/collections/0a807a8bcaa91900bf2a](https://www.getpostman.com/collections/0a807a8bcaa91900bf2a)
+Getting started with our API can be done quickly with [Postman](https://www.getpostman.com/). It's an easy tool that allows you to create PUT and POST requests from within Chrome. You can exactly see what's send and what's received. We prepared a set with example url's that allow you to experiment. You can use the import function of postman with this link to get the collection of url's: [https://www.getpostman.com/collections/0a807a8bcaa91900bf2a](https://www.getpostman.com/collections/0a807a8bcaa91900bf2a)
 
 ![](https://raw.githubusercontent.com/intellifi-nl/doc-webapi/master/postman.png)
 
@@ -81,7 +81,14 @@ Resources are the core of the web API. We tried to limit the number of resources
 Overview
 --------
 
-TODO: Add a table with all available resources.
+| Name | Description | 
+| ----- | ---- | ----------- |
+| `items` | All detected items, now and in the past. |
+| `locations` | The locatons that devices may report to. |
+| `spots` | Live information about your Intellifi Smart Spots. |
+| `presences` | All the presences in your system. |
+| `applicatons` | An overview of running applicatons inside the brain and their settings. |
+| `events` | Access to all archived events that flowed through the brain. |
 
 Id
 --
