@@ -7,25 +7,42 @@ At this moment we only support JSON as output format.
 
 By default the api is accessible on: http://`host`/api/`resource`/`id`
 * The `host` will be provided to you when you are evaluating or purchasing our product. We always have an 'play-arround' brain that we can supply to you.
-* The `resource` shall will contain the resource that you want to query. This is most of the times the plural form of a noun.
+* The `resource` shall contain the resource that you want to query. This is always the plural form of a noun. I.e. items, spots, events.
 * The **optional** `id` indicates which specific resource you wish to access. Please refer to the individual resources for more information on the type of id that is used. If you omit `id` the server will return a list with all items in the resource.
 
-As with every web API you can only request new information by doing an extra request. We offer a whole set of [pushing technologies](https://github.com/intellifi-nl/doc-push). They will allow you to be informed when something changes, instead of polling for changes.
+As with every web API you can only request new information by doing another request. We do offer a whole set of [pushing technologies](https://github.com/intellifi-nl/doc-push). They will allow you to be directly informed when something changes, instead of polling for the changes. Most use cases that we had until now can be implementated by using the web API only.
 
 Contents
 --------
-
+* [Quick start](#quick start)
 * [Terminology](#terminology)
   * [Item](#item)
   * [Zone](#zone)
 * [Resources](#resources)
   * [Overview](#overview)
-* [Design](#design)
-  * [Explorability](#explorability)
-  * [Authentication](#authentication)
-  * [Pagination](#pagination)
-  * [Versioning](#versioning)
-  * [Todo](#todo)
+  * [Resource references](#references)
+* [Future](#future)
+
+Quick start
+===========
+
+Exploring
+---------
+
+We find it very important that our web API is self explaining. We strongly recommand you to install a JSON viewer plugin in your webbrowser. This will allow you to view the query results in your web browser. For Google Chrome we advice you to use [JSONView](https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc). Without doubt there will be a nice plugin for your own personal browser as well.
+
+Most of the resources include links to other relevant resources. These links are added as fields to the JSON objects. A good JSON viewer will allow you to follow them with a simple click. These fields always have the "url_" prefix.
+
+![]()
+
+Postman
+-------
+
+For making changes on our web API we recommand you to use [Postman](https://www.getpostman.com/). It's an easy tool that allows you to create PUT and POST requests from within Chrome. We prepared a set with example url's that allows you to get started. You can use the import function of postman with this link to get the collection of url's: [https://www.getpostman.com/collections/0a807a8bcaa91900bf2a](https://www.getpostman.com/collections/0a807a8bcaa91900bf2a)
+
+![]()
+
+Off course you can also try to get it working with curl or even with your own programming environment.
 
 Terminology
 ===========
@@ -59,6 +76,25 @@ Overview
 --------
 
 TODO: Add a table with all available resources.
+
+Id
+--
+
+Every resource has an unique identiefer (id). We always start a resource by an `url` and the `id` field. The id is embedded in both. You may add the `id_only=true` condition to the query part of the url if you wish to hide the `url` field(s). This will also applie to references to other resources. The `url` fields are shown by default to increase explorability of the API. If you are creating an automated import then you probably want to add `id_only=true` to all your requests.
+
+References
+----------
+
+Most resources contain one or more fields that reference to another resource in the API. I.e. An item resource will be pointing to some location. These references can be shown in three ways. Depending on the arguments that you supply in the query part of your request url.
+
+1. By default it's shown as an url. This helps you in navigating to it, if you have the right browser extension then you can just click it. The '_url' is postfixed to the field name. I.e. location becomes location_url.
+2. If you add `id_only=true` in the query then only the id of the resource is shwon. The name of the field is postfixed with '_id'. I.e. location becomes location_id
+
+![]()
+
+3. If you add `populate=fieldname,fieldname2,etc` in the query string then the brain will try to add the documents as an extra level in the results. The name of the field is not appended with a postfix in this case. If the lookup fails then `null` is returned as value.
+
+![]()
 
 Create and updating
 -------------------
@@ -105,62 +141,12 @@ The contents of the file `putBody.json`:
 
 This will result in a reply similar to the POST command. Now the label is changed to Kitchen.
 
-Design
-======
+Future
+------
 
-API design decisions are described in this chapter. It may answer some questions that you have.
-
-Explorability
--------------
-
-We find it very important that our web API is self explaining. We strongly recommand you to install a JSON viewer plugin in your webbrowser. This will allow you to view the query results in your web browser. For Google Chrome we advice you to use [JSONView](https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc). Without doubt there will be a nice plugin for your own personal browser as well.
-
-Most of the resources include links to other relevant resources. These links are added as fields to the JSON objects. A good JSON viewer will allow you to follow them with a simple click. These fields always have the "url_" prefix.
-
-Id
---
-
-Every resource has an unique identiefer (ID). By default we embed this id into the first given field: `url`. You may add the `id_only` = true parameter to the query part of the url if you wish to have this id as a single field. The `url` field is then replaced by the `id` field. This also applies to references to other resources. You will probably want to do this in integrations only, for exploring the API it's way easier to just keep and use the `url` field.
-
-Reference
----------
-
-Most resource contain fields that reference to another resource in the API. An item resource will be pointing to some location i.e. This reference is very important an can be represented in three ways:
-
-1. By default it's shown as an url. This helps you in navigating to it, if you have the right browser extension then you can just click it. The '_url' is postfixed to the field name. I.e. location becomes location_url. 
-2. If you add `id_only=true` in the query then only the id of the resource is shwon. The name of the field is postfixed with '_id'. I.e. location becomes location_id
-3. If you add `populate=fieldname,fieldname2,etc` in the query string then API will try to add the documents as an extra level in the results. The name of the field is not appended with a postfix in this case. If the lookup fails then `null` is returned as value.
-
-Authentication
---------------
-
-TODO: API keys, users etc.
-
-Pagination
-----------
-
-The number of results is always limited to 100. Obviously we do allow you to make more querys so that you can retreive the rest of the results. This process is called paginiation and keeps our server load at acceptable levels.
-* Default list/listing envelope
-* Links that help you
-* TODO: Implement RFC specific headers?
-* TODO: Be carefull when resources are added or deleted during a paginiation. If you don't want to miss a thing then the events resource is the only reliable source.
-
-Versioning
-----------
-
-TODO: /always the latest versions, /v2, /v1
-
-Todos
------
-
+A lot of things are going to happen in the future, some things need to be developed. And other things only need to be documented. Please let us know if you are really waiting on something.
+* Authentication
+* Versioning
+* SSL
 * CORS
-* Explain time format and link to iso.
-* https is not yet supported.
-* expand for items themself, and their relations! By default only the items, you can request expands for seperate things?
-* option for extra navigational url's?
-* Time, UTC only on our side. Presentation layer can add a timezone.
-* Move the resources to a seperate page and give only an overview on this page.
-* The first returned JSON field is always an URL to the current resource or query, the second is always the id if you are working with a resource.
-* url_spot
-* id_spot
-* This is nice, we could also choose to disable 
+* Explain time format and link to iso (UTC only).
