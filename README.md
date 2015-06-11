@@ -83,12 +83,12 @@ Overview
 
 | Name | Description | 
 | ----- | ---- | ----------- |
-| `items` | All detected items, now and in the past. |
-| `locations` | The locatons that devices may report to. |
-| `spots` | Live information about your Intellifi Smart Spots. |
-| `presences` | All the presences in your system. |
-| `applicatons` | An overview of running applicatons inside the brain and their settings. |
-| `events` | Access to all archived events that flowed through the brain. |
+| [items](resources.md#items) | All detected items, now and in the past. |
+| [locations](resources.md#locations) | The locatons that devices may report to. |
+| [spots](resources.md#spots) | Live information about your Intellifi Smart Spots. |
+| [presences](resources.md#presences) | All the presences in your system. |
+| [events](resources.md#events) | Access to all archived events that flowed through the brain. |
+| applicatons | An overview of running applicatons inside the brain and their settings, not yet documented. |
 
 Id
 --
