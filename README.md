@@ -1,14 +1,14 @@
 Brain web API documentation
 ===========================
 
-This document contain the offical Brain web API documentation. We provide a RESTful API that allows you to access all the data that we provide in a powerfull and simple way.
+This document contain the official Brain web API documentation. The Brain web API is a [RESTful API](https://en.wikipedia.org/wiki/Representational_state_transfer) that allows you to access all the data that we provide in a powerfull and simple way.
 
-At this moment we only support JSON as output format.
-
-By default the api is accessible on: http://`host`/api/`resource`/`id`
-* The `host` will be provided to you when you are evaluating or purchasing our product. We always have an 'play-arround' brain that we can supply to you.
+By default the api is accessible on: http://`brain_host`/api/`resource`/`id`
+* The `brain_host` will be provided to you when you are evaluating or purchasing our product. We always have an 'play-arround' brain that we can supply to you.
 * The `resource` shall contain the resource that you want to query. This is always the plural form of a noun. I.e. items, spots, events.
 * The **optional** `id` indicates which specific resource you wish to access. Please refer to the individual resources for more information on the type of id that is used. If you omit `id` the server will return a list with all items in the resource.
+
+The default data format is JSON.
 
 As with every web API you can only request new information by doing another request. We do offer a whole set of [pushing technologies](https://github.com/intellifi-nl/doc-push). They will allow you to be directly informed when something changes, instead of polling for the changes. Most use cases that we had until now can be implementated by using the web API only.
 
@@ -33,11 +33,11 @@ Quick start
 Exploring
 ---------
 
-We find it very important that our web API is self explaining. We strongly recommand you to install a JSON viewer plugin in your webbrowser. This will allow you to view the query results in your web browser. For Google Chrome we advice you to use [JSONView](https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc). Without doubt there will be a nice plugin for your own personal browser as well.
+We find it very important that our web API is self explaining. We strongly recommand you to install a JSON viewer plugin in your webbrowser. This will allow you to view (and navigate!) the query results in your web browser. For Google Chrome we advice you to use [JSONView](https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc). Without doubt there will be a nice plugin for your own personal browser as well.
 
 ![](https://raw.githubusercontent.com/intellifi-nl/doc-webapi/master/explore2.png)
 
-Most of the resources include links to other relevant resources. These links are added as fields to the JSON objects. A good JSON viewer will allow you to follow them with a simple click.
+Most of the offered API resources include links to other relevant resources. These links are added as fields to the JSON objects. A good JSON viewer will allow you to follow them with a simple click.
 
 Postman
 -------
@@ -84,16 +84,15 @@ Overview
 | Name | Description | 
 | ----- | ---- | ----------- |
 | [items](resources.md#items) | All detected items, now and in the past. |
-| [locations](resources.md#locations) | The locatons that devices may report to. |
+| [locations](resources.md#locations) | The locations that devices may report to. |
 | [spots](resources.md#spots) | Live information about your Intellifi Smart Spots. |
 | [presences](resources.md#presences) | All the presences in your system. |
 | [events](resources.md#events) | Access to all archived events that flowed through the brain. |
-| applicatons | An overview of running applicatons inside the brain and their settings, not yet documented. |
 
 Id
 --
 
-Every resource has an unique identiefer (id). We always start a resource by an `url` and the `id` field. The id is embedded in both. You may add the `id_only=true` condition to the query part of the url if you wish to hide the `url` field(s). This will also applie to references to other resources. The `url` fields are shown by default to increase explorability of the API. If you are creating an automated import then you probably want to add `id_only=true` to all your requests.
+The first two fields of every resource are `url` and `id`. They both uniqly identify the resource. You may add the `id_only=true` condition to the query part of the url if you wish to hide the `url` field(s). This will also apply to resource references. The `url` fields are shown by default to increase explorability of the API. If you are creating an automated import then you probably want to add `id_only=true` to all your requests.
 
 References
 ----------
@@ -154,6 +153,13 @@ The contents of the file `putBody.json`:
 
 This will result in a reply similar to the POST command. Now the label is changed to Kitchen.
 
+TODO
+----
+* Explain time format and link to iso (UTC only).
+* Explain default CORS setting.
+* Explain item sets
+* Explain more on postman, environment.
+
 Future
 ------
 
@@ -161,5 +167,3 @@ A lot of things are going to happen in the future, some things need to be develo
 * Authentication
 * Versioning
 * SSL
-* CORS
-* Explain time format and link to iso (UTC only).
