@@ -19,7 +19,7 @@ The items resource will contain all [item](README.md#item) objects that where de
 
 Every item contains at least a unique id (`id`), the detected `code` and the `technology` (this combiniation is unique). The `item_id` is the reference to the item that is used in all other places in the system.
 
-You may add a `label` and a `custom` value to the item. The label is used to shwo a human readable name on several places in our user interface. 
+You may add a `label` and a `custom` value to the item. The label is used to show a human readable name on several places in our user interface. 
 
 The item is also a placeholder for the output of the localisation service. If the item is beeing detected on multiple places then we offer a most likely `location`, based on all avaialble information. The `location` only changes when the item moves to another place. If it moves out of reach then it sticks to the last known `location`. You can use `is_present` to see if the item is actively detected. We believe that this information is enough for most use cases, it just tells you where your items are.
 
@@ -47,15 +47,15 @@ Spots
 
 The Intellifi Spot devices form the eyes and the ears of the server logic. They generate events for every item that is detected. By doing so they 'implement' the earlier described [zone](README.md#zone) abstraction. 
 
-Every spot has it's own representation inside the spots resource. This allows you to see and monitor the current status of a spot. You can also configure the location that the spot reports it's detections to.
+Every spot has its own representation inside the spots resource. This allows you to see and monitor the current status of a spot. You can also configure the location that the spot reports its detections to.
 
 | Field | Type | Description | 
 | ----- | ---- | ----------- |
 | `url` | string | Url to the individual resource. |
 | `id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
-| `report_location` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to location resource that this overall spot reports it's detection to. You may set this to null if you don't want the spot to report overall presences. |
+| `report_location` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to location resource that this overall spot reports its detection to. You may set this to null if you don't want the spot to report overall presences. |
 | `antenna_report_locations` | object | You may configure this field to an object which couples individual antenna ports to locations. An example is given below. |
-| `serial_number` | number | This is the fixed and unqiue spot number. It's assigned during the production process and used to identify an individual device during it's lifetime. |
+| `serial_number` | number | This is the fixed and unqiue spot number. It's assigned during the production process and used to identify an individual device during its lifetime. |
 | `is_online` | boolean | True when the spot is active and capable of sending events. |
 | `state` | string | A text string indicating the current state of the spot. At this moment 'active' is the only value that yuo should see. |
 | `request_counter` | number | The total number of HTTP requests that the spot has done |
@@ -75,7 +75,7 @@ We will include a way to authenticate a spot in the future. This is a critical f
 
 ### Defining report locations
 
-Every spot can report it's presences to one location. You can also configure individual antennas to report to different locations (antenna presences). You may do an HTTP PUT with the following body to configure 4 individual antennas to report to some location. You have to supply the id's of the locations that you want to report to.
+Every spot can report its presences to one location. You can also configure individual antennas to report to different locations (antenna presences). You may do an HTTP PUT with the following body to configure 4 individual antennas to report to some location. You have to supply the id's of the locations that you want to report to.
 ```
 {
 	"report_location": "54f97c3cc573f4a82099749f",
@@ -175,7 +175,7 @@ Every event is envelopped in an JSON object with the following fields:
 | `id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
 | `topic` | object | A message is always accompanied by a topic string. In the brain we use a fixed format for this string. The topic string is parsed and the individual fields are shown in the object that is placed into this field. 
 | `payload` | object | An object that contains the used encoding and the actual payload (if any). We will try to get this in line with the websockets output. Possible encodings: 'json', 'utf8' or 'base64'. We might add 'null', for now it's just an empty utf8 string if nothing was send.  |
-| `time_event` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When did this event actually took place on the device? This is the device it's own timestamp. Could be different due to buffering and clock differences. |
+| `time_event` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When did this event actually took place on the device? This is the device's own timestamp. Could be different due to buffering and clock differences. |
 | `time_created` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was this event resource created at the server? |
 | `time_expire` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When is this event going to removed from the database? |
 
@@ -183,7 +183,7 @@ The topic object is always filled with these properties:
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| `resource_type` | string | One of the defined [resources](#resource). Is also written in it's plural form. I.e. 'spots', 'items'. |
+| `resource_type` | string | One of the defined [resources](#resource). Is also written in its plural form. I.e. 'spots', 'items'. |
 | `resource` | [reference](README.md#reference) | Reference to one of the resources. Please note that it's an event from the past, the resource may not exist anymore. |
 | `action` | string | Indicates the kind of event that was executed. In most cases it's a verb. I.e. 'connected', 'created' etc.
 | `arguments` | object | Extra arguments may be added to a topic string, it depends on the `resource_type` and the `action` what extra arguments are added.
