@@ -8,15 +8,13 @@ By default the api is accessible on: http://`brain_host`/api/`resource`/`id`
 * The `resource` shall contain the resource that you want to query. This is always the plural form of a noun. I.e. items, spots, events.
 * The **optional** `id` indicates which specific resource you wish to access. Please refer to the individual resources for more information on the type of id that is used. If you omit `id` the server will return a list with all items in the resource.
 
-The default data format is JSON.
+The default data format is [JSON](https://en.wikipedia.org/wiki/JSON).
 
 As with every web API you can only request new information by doing another request. We do offer a whole set of [pushing technologies](https://github.com/intellifi-nl/doc-push). They will allow you to be directly informed when something changes, instead of polling for the changes. Most use cases that we had until now can be implementated by using the web API only.
 
 Contents
 --------
-* [Quick start](#quick-start)
-  * [Exploring](#exploring)
-  * [Postman](#postman)
+* [Getting started](#getting-started)
 * [Terminology](#terminology)
   * [Item](#item)
   * [Zone](#zone)
@@ -24,31 +22,12 @@ Contents
   * [Overview](#overview)
   * [Id](#id)    
   * [References](#references)  
-  * [Create and update](#create-and-update)
 * [Future](#future)
 
-Quick start
-===========
+Getting started
+===============
 
-Exploring
----------
-
-We find it very important that our web API is self explaining. We strongly recommand you to install a JSON viewer plugin in your webbrowser. This will allow you to view (and navigate!) the query results in your web browser. For Google Chrome we advice you to use [JSONView](https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc). Without doubt there will be a nice plugin for your own personal browser as well.
-
-![](https://raw.githubusercontent.com/intellifi-nl/doc-webapi/master/explore2.png)
-
-Most of the offered API resources include links to other relevant resources. These links are added as fields to the JSON objects. A good JSON viewer will allow you to follow them with a simple click.
-
-Postman
--------
-
-Getting started with our API can be done quickly with [Postman](https://www.getpostman.com/). It's an easy tool that allows you to create PUT and POST requests from within Chrome. You can exactly see what's send and what's received. We prepared a set with example url's that allow you to experiment. You can use the import function of postman with this link to get the collection of url's: [https://www.getpostman.com/collections/0a807a8bcaa91900bf2a](https://www.getpostman.com/collections/0a807a8bcaa91900bf2a)
-
-![](https://raw.githubusercontent.com/intellifi-nl/doc-webapi/master/postman.png)
-
-Please note that given example url's should be replaced by resources that actually exist. You can just copy and past them from your own brain.
-
-More information and some examples for curl can be found [below](#create-and-update).
+We do advise you to take a quick look at our [quick start](quick-start.md) for some hints and tooling. In the rest of the documentation we assume that you understand HTTP, JSON and that you know which tools you can use to work with them.
 
 Terminology
 ===========
@@ -108,58 +87,6 @@ Most resources contain one or more fields that reference to another resource in 
 3. If you add `populate=fieldname,fieldname2,etc` in the query string then the brain will try to add the documents as an extra level in the results. The name of the field is not appended with a postfix in this case. If the lookup fails then `null` is returned as value.
 ![](https://raw.githubusercontent.com/intellifi-nl/doc-webapi/master/explore_populate.png)
 
-Create and update
------------------
-
-You can create and change most avaialble resources in the API. This can be done by sending an HTTP POST (for creating) or PUT (for updating). Your programming language will most likely have several options to achieve this. In this example we will use the wel known unix tool curl (also avaialble for windows).  Many other tools are avaialble.
-
-We will first create a new location by running post:
-```
-curl -XPOST -H "Content-Type: application/json" --data @postBody.json http://`host`/api/locations
-```
-
-The body will be filled with the contents of the `postBody.json` file:
-```
-{
-  "key":"value",
-  "label":"My first! Yeah"
-}
-```
-
-Please note that you may add multiple key/value pairs in the object. Unknown values will be ignored.
-
-The reply to this POST will be another JSON object that contains information about the executed request. The most imporant is the url and the id of the newly created resource:
-```
-{
-  "updated_properties_count":2,
-  "url":"http://localhost:3000/api/locations/550052669dba59d03057cb74",
-  "id":"550052669dba59d03057cb74",
-}
-```
-
-More fields may be added in the future without further notice.
-
-We now want to change the value of the label to a more sensible value. Please note that you will have to add the id of the resource to your uri.
-```
-curl -XPUT -H "Content-Type: application/json" --data @putBody.json localhost:3000/api/locations/550052669dba59d03057cb74
-```
-
-The contents of the file `putBody.json`:
-```
-{
-  "label":"Kitchen"
-}
-```
-
-This will result in a reply similar to the POST command. Now the label is changed to Kitchen.
-
-TODO
-----
-* Explain time format and link to iso (UTC only).
-* Explain default CORS setting.
-* Explain item sets
-* Explain more on postman, environment.
-
 Future
 ------
 
@@ -167,3 +94,6 @@ A lot of things are going to happen in the future, some things need to be develo
 * Authentication
 * Versioning
 * SSL
+* Explain time format and link to iso (UTC only).
+* Explain default CORS setting.
+* Explain item sets
