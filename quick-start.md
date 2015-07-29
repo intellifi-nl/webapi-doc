@@ -18,20 +18,23 @@ Postman
 Getting started with our API can be done quickly with [Postman](https://www.getpostman.com/). It's an easy tool that allows you to create PUT and POST requests from within Chrome. You can exactly see what's send and what's received. We prepared a set with example url's that allow you to experiment. It should look like this:
 ![](https://raw.githubusercontent.com/intellifi-nl/doc-webapi/master/postman-get.png)
 
-First you should use the import function of postman with this link to get the collection of url's: [https://www.getpostman.com/collections/45fa9260f58619764111](https://www.getpostman.com/collections/45fa9260f58619764111). Just follow the steps in this picture and you should be fine. 
+First you should use the import function of postman to get the collection with example urls.
+
+Copy this value: `https://www.getpostman.com/collections/45fa9260f58619764111`
+
+Now just follow these steps:
 ![](https://raw.githubusercontent.com/intellifi-nl/doc-webapi/master/postman-import.png)
 Note: postman gets a lot of updates, so it might look a bit different. Just search for the import and you should be fine.
 
-You can press the little arrow to get a very nice overview in which I added some extra comments to the urls.
-![](https://raw.githubusercontent.com/intellifi-nl/doc-webapi/master/postman-overview.png)
-
-
-You should create and configure an environment. This allows you to tell postman the adress of your brain.
+You should also create and configure an environment. This allows you to tell postman the adress of your brain.
 ![](https://raw.githubusercontent.com/intellifi-nl/doc-webapi/master/postman-env.png)
 
 This environment screen allows you to configure key/value pairs. You only need to define the key `brain_host` to your brain server address, i.e. `brain.intellifi.nl`. Please make sure that you don't include the protocol name and the trailing slash!
 
-Please note that some example url's include document ids, they should be replaced by resources that actually exist on your server. You can just copy and past them from your browser.
+Tip: You can press the little arrow to get a very nice overview in which I added some extra comments to the urls.
+![](https://raw.githubusercontent.com/intellifi-nl/doc-webapi/master/postman-overview.png)
+
+Important note: some example url's include document ids, they should be replaced by resources that actually exist on your server. You can just copy and past them from your browser.
 
 Curl
 ----
