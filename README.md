@@ -66,6 +66,8 @@ Overview
 | [locations](resources.md#locations) | The locations that devices may report to. |
 | [spots](resources.md#spots) | Live information about your Intellifi Smart Spots. |
 | [presences](resources.md#presences) | All the presences in your system. |
+| sets | Combine items into lists. |
+| services | Overview of running background processes on the brain. |
 | [events](resources.md#events) | Access to all archived events that flowed through the brain. |
 
 Id
