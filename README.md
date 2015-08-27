@@ -48,9 +48,9 @@ A zone is an area in which items can be detected. This area is naturually limite
 
 A lot of devices are capable of behaving themselves as 'zones'. Our [Intellif Spot](http://intellifi.nl/home/products/) is a very good example of this. It can detect RFID tags and Bluetooth tags that are in the neighbourhoud. It reports these detections through its network interface to a server. It's also possible to connect external antennas to the Spot. By default they are used to enlarge the reach of the overall Spot zone. You may configure individual external antenna to behave themselve as a zone as well. By doing so you are essentially creating a virtual spot. 
 
-Another great example of a zone could be your smartphone. Lot's of smartphones support the detection if iBeacons. It's a matter of the right app to report this information to a server. And voilà: here's another zone that you can use to detect your items.
+Another great example of a zone could be your smartphone. Lots of smartphones support the detection of iBeacons. It's a matter of the right app to report this information to a server. And voilà: here's another zone that you can use to detect your items.
 
-So you see that a zone is an abstraction, it can be 'implemented' by multiple devices. Therefore it's not avaialble as a seperate resource in our web API. You will see that most resources mention the word, it's a key concept in our solution.
+So you see that a zone is an abstraction, it can be 'implemented' by multiple devices. Therefore it's not available as a seperate resource in our web API. You will see that most resources mention the word, it's a key concept in our solution.
 
 Resources
 =========
@@ -73,7 +73,7 @@ Overview
 Id
 --
 
-The first two fields of every resource are `url` and `id`. They both uniqly identify the resource. You may add the `id_only=true` condition to the query part of the url if you wish to hide the `url` field(s). This will also apply to resource references. The `url` fields are shown by default to increase explorability of the API. If you are creating an automated import then you probably want to add `id_only=true` to all your requests.
+The first two fields of every resource are `url` and `id`. They both uniquely identify the resource. You may add the `id_only=true` condition to the query part of the url if you wish to hide the `url` field(s). This will also apply to resource references. The `url` fields are shown by default to increase explorability of the API. If you are creating an automated import then you probably want to add `id_only=true` to all your requests.
 
 References
 ----------
