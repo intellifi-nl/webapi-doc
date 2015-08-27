@@ -1,7 +1,7 @@
 Brain web API documentation
 ===========================
 
-This document contain the official Brain web API documentation. The Brain web API is a [RESTful API](https://en.wikipedia.org/wiki/Representational_state_transfer) that allows you to access all the data that we provide in a powerfull and simple way.
+This document contain the official Brain web API documentation. The Brain web API is a [RESTful API](https://en.wikipedia.org/wiki/Representational_state_transfer) that allows you to access all the data that we provide in a powerful and simple way.
 
 By default the api is accessible on: http://`brain_host`/api/`resource`/`id`
 * The `brain_host` will be provided to you when you are evaluating or purchasing our product. We always have an 'play-arround' brain that we can supply to you.
@@ -92,7 +92,7 @@ Most resources contain one or more fields that reference to another resource in 
 Future
 ------
 
-A lot of things are going to happen in the future, some things need to be developed. And other things only need to be documented. Please let us know if you are really waiting on something.
+A lot of things are going to happen in the future, some things need to be developed. And other things only need to be documented. Please let us know if you are really waiting for something.
 * Authentication
 * Versioning
 * SSL
