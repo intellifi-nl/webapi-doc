@@ -15,14 +15,14 @@ Most of the offered API resources include links to other relevant resources. The
 Postman
 -------
 
-Getting started with our API can be done quickly with [Postman](https://www.getpostman.com/). It's an easy tool that allows you to create PUT and POST requests from within Chrome. You can exactly see what's sent and what's received. We prepared a set with example urls that allow you to experiment. It should look like this:
+Getting started with our API can be done quickly by downloading [Postman](https://www.getpostman.com/). It's an easy tool that allows you to create PUT and POST requests from within Chrome. You can exactly see what's sent and what's received. We prepared a set with example urls that allow you to experiment. It should look like this:
 ![](https://raw.githubusercontent.com/intellifi-nl/doc-webapi/master/postman-get.png)
 
 First you should use the import function of postman to get the collection with example urls.
 
-Copy this value: `https://www.getpostman.com/collections/45fa9260f58619764111`
+Copy this value to your clipboard: `https://www.getpostman.com/collections/45fa9260f58619764111`
 
-Now just follow these steps:
+Now paste the url into the import function:
 ![](https://raw.githubusercontent.com/intellifi-nl/doc-webapi/master/postman-import.png)
 Note: postman gets a lot of updates, so it might look a bit different. Just search for the import and you should be fine.
 
