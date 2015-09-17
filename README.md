@@ -70,6 +70,12 @@ Overview
 | services | Overview of running background processes on the brain. |
 | [events](resources.md#events) | Access to all archived events that flowed through the brain. |
 
+
+Collections
+-----------
+
+The top level resources are all collections, they are wrapped into an object with information about the query. The collections are [paginated](pagination.md) when they contain more than 100 resources.
+
 Id
 --
 
@@ -95,7 +101,7 @@ Future
 A lot of things are going to happen in the future, some things need to be developed. And other things only need to be documented. Please let us know if you are really waiting for something.
 * Authentication
 * Versioning
-* SSL
+* TLS
 * Explain time format and link to iso (UTC only).
 * Explain default CORS setting.
 * Explain item sets
