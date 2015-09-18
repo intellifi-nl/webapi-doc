@@ -27,7 +27,7 @@ Changing the limit
 ------------------
 You may increase or decrease the number of returned documents by adding `limit` to your query parameters. I.e. requesting 5 maximal resources per page would be done by: [http://brain.intellifi.nl/api/items?limit=5](http://brain.intellifi.nl/api/items?limit=5) It would be usefull to increase `limit` when you have a high lattency between client and server. It would decrease the number of required roundtrips. At this moment you may set any `limit` value you like, please don't use huge values (>1000). It would cause high server loads and an unresponsive application. 
 
-Off course you can combine the query parameters. Let's say that you want to request a top 10 of present items that have the highest number of moves: [http://brain.intellifi.nl?sort=-move_count&limit=10&is_present=true](http://brain.intellifi.nl?sort=-move_count&limit=10&is_present=true)
+Off course you can combine the query parameters. Let's say that you want to request a top 10 of present items that have the highest number of moves: [http://brain.intellifi.nl/api/items?sort=-move_count&limit=10&is_present=true](http://brain.intellifi.nl/api/items?sort=-move_count&limit=10&is_present=true)
 
 Following
 ---------
