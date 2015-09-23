@@ -1,10 +1,10 @@
 Brain web API documentation
 ===========================
 
-This document contain the official Brain web API documentation. The Brain web API is a [RESTful API](https://en.wikipedia.org/wiki/Representational_state_transfer) that allows you to access all the data that we provide in a powerful and simple way.
+This document contain the official Intellifi Brain web API documentation. The Brain web API is a [RESTful API](https://en.wikipedia.org/wiki/Representational_state_transfer) that allows you to interact with our equipment in a powerful and simple way. Our [solution](http://intellifi.nl/) allows you to localise your items (or assets) based upon one of the supported RFID technologies.
 
-By default the api is accessible on: http://`brain_host`/api/`resource`/`id`
-* The `brain_host` will be provided to you when you are evaluating or purchasing our product. We always have an 'play-arround' brain that we can supply to you.
+By default the API is accessible on: http://`brain_host`/api/`resource`/`id`
+* The `brain_host` will be provided to you when you are evaluating or purchasing our product. Please contact us if you want ot perform some experiments, we always have a play arround brain avaialble.
 * The `resource` shall contain the resource that you want to query. This is always the plural form of a noun. I.e. items, spots, events.
 * The **optional** `id` indicates which specific resource you wish to access. Please refer to the individual resources for more information on the type of id that is used. If you omit `id` the server will return a list with all items in the resource.
 
@@ -20,6 +20,7 @@ Contents
   * [Zone](#zone)
 * [Resources](#resources)
   * [Overview](#overview)
+  * [Collections](#collections)
   * [Id](#id)    
   * [References](#references)  
 * [Future](#future)
@@ -39,7 +40,7 @@ Item
 
 An item is a small and lightweight electronic device that contains and remembers a unique code. An item must be able to transmit this unqiue code wireless. This item may be a passive RFID tag, but it can also be an iBeacon. Even your smartphone could behave itself as an item. A device is an item as long as it's able to remember and transmit its unique code.
 
-An item is an abstraction that allows us to work with RFID tags and iBeacon tags as if they where the same. Attributes are added to the items so that you can see the difference, if you wish.
+An item is an abstraction that allows us to work with RFID tags and iBeacon tags as if they where the same. Every item is added as a resource in our API as soon as it's detected by one of our readers. The resource is the place to start if you wish to know where your item is. You can add attributes to the item by setting the label or the custom field.
 
 Zone
 ----
@@ -50,7 +51,7 @@ A lot of devices are capable of behaving themselves as 'zones'. Our [Intellif Sp
 
 Another great example of a zone could be your smartphone. Lots of smartphones support the detection of iBeacons. It's a matter of the right app to report this information to a server. And voilà: here's another zone that you can use to detect your items.
 
-So you see that a zone is an abstraction, it can be 'implemented' by multiple devices. Therefore it's not available as a seperate resource in our web API. You will see that most resources mention the word, it's a key concept in our solution.
+So you see that a zone is an abstraction, it can be 'implemented' by multiple devices. Therefore it's not available as a seperate resource in our web API.
 
 Resources
 =========
@@ -79,7 +80,7 @@ The top level resources are all collections, they are wrapped into an object wit
 Id
 --
 
-The first two fields of every resource are `url` and `id`. They both uniquely identify the resource. You may add the `id_only=true` condition to the query part of the url if you wish to hide the `url` field(s). This will also apply to resource references. The `url` fields are shown by default to increase explorability of the API. If you are creating an automated import then you probably want to add `id_only=true` to all your requests.
+The first two fields of every resource are always `url` and `id`. They both uniquely identify the resource. You may add the `id_only=true` condition to the query part of the url if you don't wish to receive the `url` field(s). This option will also apply to resource references. The `url` fields are shown by default to increase explorability of the API. If you are creating an automated import then you probably want to add `id_only=true` to all your requests.
 
 References
 ----------
@@ -99,9 +100,8 @@ Future
 ------
 
 A lot of things are going to happen in the future, some things need to be developed. And other things only need to be documented. Please let us know if you are really waiting for something.
-* Authentication
-* Versioning
-* TLS
+* Authentication / versioning / TLS
 * Explain time format and link to iso (UTC only).
 * Explain default CORS setting.
 * Explain item sets
+* Explain comma seperated export (by adding .txt or .csv to resource).
