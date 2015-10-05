@@ -10,7 +10,7 @@ By default the API is accessible on: http://`brain_host`/api/`resource`/`id`
 
 The default data format is [JSON](https://en.wikipedia.org/wiki/JSON).
 
-As with every web API you can only request new information by doing another request. We do offer a whole set of [pushing technologies](https://github.com/intellifi-nl/doc-push). They will allow you to be directly informed when something changes, instead of polling for the changes. Most use cases that we had until now can be implementated by using the web API only.
+As with every web API you can only request new information by doing another request. We do offer a [pushing technologies](https://github.com/intellifi-nl/doc-push). They will allow you to be directly informed when something changes, instead of polling for the changes. Most use cases that we had until now can be implementated by using the web API only.
 
 Contents
 --------
@@ -40,7 +40,7 @@ Item
 
 An item is a small and lightweight electronic device that contains and remembers a unique code. An item must be able to transmit this unqiue code wireless. This item may be a passive RFID tag, but it can also be an iBeacon. Even your smartphone could behave itself as an item. A device is an item as long as it's able to remember and transmit its unique code.
 
-An item is an abstraction that allows us to work with RFID tags and iBeacon tags as if they where the same. Every item is added as a resource in our API as soon as it's detected by one of our readers. The resource is the place to start if you wish to know where your item is. You can add attributes to the item by setting the label or the custom field.
+An item is an abstraction that allows us to work with RFID tags and iBeacon tags as if they where the same. Every item is added as a resource in our API as soon as it's detected by one of our readers. The resource is the place to start if you wish to know where your item is. You may add attributes to the item by setting the label or the custom field.
 
 Zone
 ----
