@@ -21,7 +21,7 @@ Ordering
 --------
 You can adjust the order by adding the `sort` parameter to your query parameters. You can sort on all fields in the resource, you may even sort on multiple fields. Just add them seperated by commas. The default order is ascending, you may make a order descending by adding a minus sign (-) in front of the field name. The default `sort` value is `-id`.
 
-Please note that pagination only works when you sort on `id`. This can both ascending `sort=id` (the default `sort` value) and descending `sort=-id`. The `url_next` is always set to null when you sort on other fields.
+Please note that pagination only works when you sort on `id`. This can both ascending `sort=id` (the default `sort` value) and descending `sort=-id`. The `url_next` is always set to null when you sort on other fields. This works because id values are chronological (new id values always get an higher value than previous values).
 
 Changing the limit
 ------------------
