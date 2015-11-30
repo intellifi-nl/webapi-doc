@@ -1,5 +1,5 @@
 # Brain security
-Starting with release 2.0, the Brain graphical interface, REST API and socket.io event pusher have several access restrictions by default. This document describes the Brain security measures and how to work with them.
+Starting with release 2.0, the Brain graphical interface, web API and socket.io event pusher have several access restrictions by default. This document describes the Brain security measures and how to work with them.
 
 ## Security measures
 
@@ -8,15 +8,15 @@ The graphical interface (used to manage smartspots and access apps and tools) re
 
 Passwords are not stored on the server; only a cryptographically strong fingerprint is retained. If a user loses their password it will have to be reset through one of the interfaces described in *Access management*.
 
-### API authentication
-Applications are required to provide an API key with every HTTP request to the REST API or new connection with the socket.io event pusher. The API key can be provided using either of the following methods:
+### web API authentication
+Applications are required to provide an API key with every HTTP request to the web API or new connection with the socket.io event pusher. The API key can be provided using either of the following methods:
 * With a query parameter --- `https://brain/api/endpoint?key=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
 * With an HTTP request header --- `X-Api-Key: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
 
 Alternatively, being logged into the graphical frontend (i.e. having a valid session cookie) grants full access to the API. This is particularly useful for using the API manually.
 
 ### Same-origin policy
-When authentication is enabled on the REST API and socket.io pusher, a same-origin policy will also be enforced. This means browser applications written in Javascript are not allowed to directly connect to these services (because there would be no way to do so without compromising security).
+When authentication is enabled on the web API and socket.io pusher, a same-origin policy will also be enforced. This means browser applications written in Javascript are not allowed to directly connect to these services (because there would be no way to do so without compromising security).
 
 ### Secure connections (TLS)
 TLS security (i.e. `https` protocol) is enabled and enforced for Brains on \*.intellifi.nl domains. Brain virtual machine images shipped by Intellifi do not have TLS enabled by default, because this would require a valid certificate for the domain the Brain is going to be deployed on. Customers who have a Brain with their own domain name can contact Intellifi for information on how to install their own certificate so that TLS can be enabled.
