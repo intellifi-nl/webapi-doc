@@ -8,7 +8,7 @@ The graphical interface (used to manage smartspots and access apps and tools) re
 
 Passwords are not stored on the server; only a cryptographically strong fingerprint is retained. If a user loses their password it will have to be reset through one of the interfaces described in *Access management*.
 
-### web API authentication
+### Web API authentication
 Applications are required to provide an API key with every HTTP request to the web API or new connection with the socket.io event pusher. The API key can be provided using either of the following methods:
 * With a query parameter --- `https://brain/api/endpoint?key=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
 * With an HTTP request header --- `X-Api-Key: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
