@@ -13,10 +13,7 @@ Applications are required to provide an API key with every HTTP request to the w
 * With a query parameter --- `https://brain/api/endpoint?key=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
 * With an HTTP request header --- `X-Api-Key: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
 
-Alternatively, being logged into the graphical frontend (i.e. having a valid session cookie) grants full access to the API. This is particularly useful for using the API manually.
-
-### Same-origin policy
-When authentication is enabled on the web API and socket.io pusher, a same-origin policy will also be enforced. This means browser applications written in Javascript are not allowed to directly connect to these services (because there would be no way to do so without compromising security).
+Alternatively, being logged into the graphical frontend (i.e. having a valid session cookie) grants full access to the API. This is particularly useful for using the API manually. However, a same-origin policy is enforced for cookie authentication. Therefore browser applications written in Javascript cannot be authenticated in this way.
 
 ### Secure connections (TLS)
 TLS security (i.e. `https` protocol) is enabled and enforced for Brains on \*.intellifi.nl domains. Brain virtual machine images shipped by Intellifi do not have TLS enabled by default, because this would require a valid certificate for the domain the Brain is going to be deployed on. Customers who have a Brain with their own domain name can contact Intellifi for information on how to install their own certificate so that TLS can be enabled.
