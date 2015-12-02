@@ -10,7 +10,7 @@ Passwords are not stored on the server; only a cryptographically strong fingerpr
 
 ### Web API authentication
 Applications are required to provide an API key with every HTTP request to the web API or new connection with the socket.io event pusher. The API key can be provided using either of the following methods:
-* With a query parameter --- `https://brain/api/endpoint?key=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
+* With a query parameter --- `https://brain_host/api/endpoint?key=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
 * With an HTTP request header --- `X-Api-Key: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
 
 Currently, there are no capability differences between API keys. Every API key can perform any action on any resource, except for the protected resources `users` and `keys`.
