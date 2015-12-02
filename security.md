@@ -10,10 +10,8 @@ Passwords are not stored on the server; only a cryptographically strong fingerpr
 
 ### Web API authentication
 Applications are required to provide an API key with every HTTP request to the web API or new connection with the socket.io event pusher. The API key can be provided using either of the following methods:
-* With a query parameter --- `https://brain_host/api/endpoint?key=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
-* With an HTTP request header --- `X-Api-Key: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
-
-Currently, there are no capability differences between API keys. Every API key can perform any action on any resource, except for the protected resources `users` and `keys`.
+* With a query parameter &mdash; `https://brain_host/api/endpoint?key=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
+* With an HTTP request header &mdash; `X-Api-Key: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
 
 Alternatively, being logged into the graphical frontend (i.e. having a valid session cookie) grants full access to the API. This is particularly useful for using the API manually. However, a same-origin policy is enforced for cookie authentication. Therefore browser applications written in Javascript cannot be authenticated in this way.
 
@@ -26,6 +24,13 @@ A graphical utility for managing Brain users and API keys is planned but not yet
 Users and keys can be viewed and manipulated using the REST API (`/api/users` and `/api/keys` endpoints). Note that this requires being logged in as a user with administrator privileges; just providing an API key is not sufficient to access these resources.
 
 Customers who manage their own Brain and have SSH server access can also utilize a wizard-style command line tool for managing users, keys and low-level security settings (including the possibility to disable API authentication). This tool can be started by logging into SSH and executing the command `accesstool`.
+
+## Permissions
+API keys have equivalent permissions. Every API key can perform any action on any resource, except for the protected resources `users` and `keys`.
+
+User accounts are also mostly equivalent, except for the following properties:
+* Administrator &mdash; if a user is administrator, they can manage users and API keys
+* Locked &mdash; if a user is locked, they cannot edit their own user details (e.g. demo/guest user)
 
 ## Default credentials
 Every new Brain installation automatically creates one user with administrator privileges and one API key. The user credentials are supplied by Intellifi after purchasing a Brain license. The API key can then be viewed by logging in and navigating to `/api/keys`.
