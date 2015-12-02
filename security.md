@@ -6,7 +6,7 @@ Starting with release 2.0, the Brain graphical interface, web API and socket.io 
 ### Graphical user interface authentication
 The graphical interface (used to manage smartspots and access apps and tools) requires logging in with an email address and password. Login sessions are valid for thirty days by default; this is configurable through the `services` resource on the API.
 
-Passwords are not stored on the server; only a cryptographically strong fingerprint is retained. If a user loses their password it will have to be reset through one of the interfaces described in *Access management*.
+Passwords are not stored on the server; only a cryptographically strong fingerprint is retained. If a user loses their password it will have to be reset through one of the interfaces described in [Access management](#access-management)
 
 ### Web API authentication
 Applications are required to provide an API key with every HTTP request to the web API or new connection with the socket.io event pusher. The API key can be provided using either of the following methods:
