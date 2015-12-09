@@ -19,11 +19,11 @@ Alternatively, being logged into the graphical frontend (i.e. having a valid ses
 TLS security (i.e. `https` protocol) is enabled and enforced for Brains on \*.intellifi.nl domains. Brain virtual machine images shipped by Intellifi do not have TLS enabled by default, because this would require a valid certificate for the domain the Brain is going to be deployed on. Customers who have a Brain with their own domain name can contact Intellifi for information on how to install their own certificate so that TLS can be enabled.
 
 ## Access management
-A graphical utility for managing Brain users and API keys is planned but not yet available. For now security-related administration has to be performed using one of the methods described below.
+A graphical utility for managing Brain users and API keys is available on the right of the menu bar as "Admin panel" (visible only to administrator users).
 
-Users and keys can be viewed and manipulated using the REST API (`/api/users` and `/api/keys` endpoints). Note that this requires being logged in as a user with administrator privileges; just providing an API key is not sufficient to access these resources.
+Users and keys can also be directly viewed and manipulated using the REST API (`/api/users` and `/api/keys` endpoints). Note that this requires being logged in as a user with administrator privileges; just providing an API key is not sufficient to access these resources.
 
-Customers who manage their own Brain and have SSH server access can also utilize a wizard-style command line tool for managing users, keys and low-level security settings (including the possibility to disable API authentication). This tool can be started by logging into SSH and executing the command `accesstool`.
+Customers who manage their own Brain and have SSH server access can alternatively utilize a wizard-style command line tool for managing users, keys and low-level security settings (including the possibility to disable API authentication). This tool can be started by logging into SSH and executing the command `accesstool`. It is the most direct way of managing security and works even when, for some reason, no administrator users are left on the Brain.
 
 ## Permissions
 API keys have equivalent permissions. Every API key can perform any action on any resource, except for the protected resources `users` and `keys`.
