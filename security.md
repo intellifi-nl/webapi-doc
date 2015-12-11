@@ -16,7 +16,17 @@ Applications are required to provide an API key with every HTTP request to the w
 Alternatively, being logged into the graphical frontend (i.e. having a valid session cookie) grants full access to the API. This is particularly useful for using the API manually. However, a same-origin policy is enforced for cookie authentication. Therefore browser applications written in Javascript cannot be authenticated in this way.
 
 ### Secure connections (TLS)
-TLS security (i.e. `https` protocol) is enabled and enforced for Brains on \*.intellifi.nl domains. Brain virtual machine images shipped by Intellifi do not have TLS enabled by default, because this would require a valid certificate for the domain the Brain is going to be deployed on. Customers who have a Brain with their own domain name can contact Intellifi for information on how to install their own certificate so that TLS can be enabled.
+TLS security (i.e. `https` protocol) is enabled and enforced for Brains on \*.intellifi.nl domains. Brain virtual machine images shipped by Intellifi do not have TLS enabled by default, because this would require a valid certificate for the domain the Brain is going to be deployed on.
+
+#### Certificate installation procedure
+This section is for customers who deploy a Brain on a domain name not managed by Intellifi and want to enable TLS security using a certificate for this domain.
+
+1. Make sure your certificate:
+    * Is valid for the domain name your Brain uses.
+    * Is signed by a trusted authority.
+    * Is exported to a `.key` and `.crt` file pair. The crt-file should contain all necessary information, including intermediate CA certificates if applicable.
+2. Log into the server with an SFTP client. Create the directory `/tmp/cert` if it does not exist. Upload the two files to this directory.
+3. Log into the server with an SSH client. Execute the command `sudo httpstool`, select the *install* option and enter your domain name. Afterwards, the *uninstall* option can be used to disable TLS again if this is necessary for some reason.
 
 ## Access management
 A graphical utility for managing Brain users and API keys is available on the right of the menu bar as "Admin panel" (visible only to administrator users).
