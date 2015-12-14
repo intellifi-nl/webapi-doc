@@ -16,17 +16,7 @@ Applications are required to provide an API key with every HTTP request to the w
 Alternatively, being logged into the graphical frontend (i.e. having a valid session cookie) grants full access to the API. This is particularly useful for using the API manually. However, a same-origin policy is enforced for cookie authentication. Therefore browser applications written in Javascript cannot be authenticated in this way.
 
 ### Secure connections (TLS)
-TLS security (i.e. `https` protocol) is enabled and enforced for Brains on \*.intellifi.nl domains. Brain virtual machine images shipped by Intellifi do not have TLS enabled by default, because this would require a valid certificate for the domain the Brain is going to be deployed on.
-
-#### Certificate installation procedure
-This section is for customers who deploy a Brain on a domain name not managed by Intellifi and want to enable TLS security using a certificate for this domain.
-
-1. Make sure your certificate:
-    * Is valid for the domain name your Brain uses.
-    * Is signed by a trusted authority.
-    * Is exported to a `.key` and `.crt` file pair. The crt-file should contain all necessary information, including intermediate CA certificates if applicable.
-2. Log into the server with an SFTP client. Create the directory `/tmp/cert` if it does not exist. Upload the two files to this directory.
-3. Log into the server with an SSH client. Execute the command `sudo httpstool`, select the *install* option and enter your domain name. Afterwards, the *uninstall* option can be used to disable TLS again if this is necessary for some reason.
+TLS security (i.e. `https` protocol) is enabled and enforced for Brains on \*.intellifi.nl domains. Brain virtual machine images shipped by Intellifi do not have TLS enabled by default, because this requires a valid certificate for the domain the Brain is going to be deployed on. See [Certificate installation](#certificate-installation) for how to enable TLS using your own certificate.
 
 ## Access management
 A graphical utility for managing Brain users and API keys is available on the right of the menu bar as "Admin panel" (visible only to administrator users).
@@ -44,3 +34,15 @@ User accounts are also mostly equivalent, except for the following properties:
 
 ## Default credentials
 Every new Brain installation automatically creates one user with administrator privileges and one API key. The user credentials are supplied by Intellifi after purchasing a Brain license. The API key can then be viewed by logging in and navigating to `/api/keys`.
+
+## Certificate installation
+This section is for customers who deploy a Brain on a domain name not managed by Intellifi and want to enable TLS security using a certificate for this domain.
+
+1. Make sure your certificate:
+    * Is valid for the domain name your Brain uses.
+    * Is signed by a trusted authority.
+    * Is exported to a `.key` and `.crt` file pair. The crt-file should contain all necessary information, including intermediate CA certificates if applicable.
+2. Log into the server with an SFTP client. Create the directory `/tmp/cert` if it does not exist. Upload the `.key` and `.crt` file to this directory.
+3. Log into the server with an SSH client. Execute the command `sudo httpstool`, select the *install* option and enter your domain name.
+
+If you ever have to disable TLS again for some reason, repeat step 3 with the *uninstall* option.
