@@ -1,12 +1,12 @@
 Brain web API quick start
 =========================
 
-This page describes some tools and basics that you need to get started with our web API. First off all you will need some knowledge of [HTTP](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol) and [JSON](https://en.wikipedia.org/wiki/JSON). They are the building blocks of our eco system (and many others off course).
+This page describes some tools and basics that you need to know in order to get started with our web API. First of all you will need some knowledge of [HTTP](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol) and [JSON](https://en.wikipedia.org/wiki/JSON). They are the building blocks of our eco system (and many others of course).
 
 Exploring
 ---------
 
-We find it very important that our web API is self explaining. We strongly recommand you to install a JSON viewer plugin in your webbrowser. This will allow you to view (and navigate!) the query results in your web browser. For Google Chrome we advice you to use [JSONView](https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc). Without doubt there will be a nice plugin for your own personal browser as well.
+We find it very important that our web API is self-explanatory. We strongly recommend you to install a JSON viewer plugin in your webbrowser. This will allow you to view (and navigate!) the query results in your web browser. For Google Chrome we advice you to use [JSONView](https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc). Without doubt there will be a nice plugin for your own favorite browser as well.
 
 ![](https://raw.githubusercontent.com/intellifi-nl/doc-webapi/master/explore2.png)
 
@@ -15,7 +15,7 @@ Most of the offered API resources include links to other relevant resources. The
 Postman
 -------
 
-Getting started with our API can be done quickly by downloading [Postman](https://www.getpostman.com/). It's an easy tool that allows you to create PUT and POST requests from within Chrome. You can exactly see what's sent and what's received. We prepared a set with example urls that allow you to experiment. It should look like this:
+Getting started with our API can be done quickly by downloading [Postman](https://www.getpostman.com/). It's an easy tool that allows you to create PUT and POST requests from within Chrome. You can exactly see what's sent and what's received. We prepared a set with example urls that allows you to experiment. It should look like this:
 ![](https://raw.githubusercontent.com/intellifi-nl/doc-webapi/master/postman-get.png)
 
 First you should use the import function of postman to get the collection with example urls.
@@ -39,7 +39,7 @@ Important note: some example url's include document ids, they should be replaced
 Curl
 ----
 
-Off course you can also perform all given examples in curl, the good old unix tool for doing HTTP requests. You could also install curl on Windows if you like.
+Off course you can also perform all given examples in curl, the good old unix tool for doing HTTP requests. You could also install curl on Windows if you'd like.
 
 Adding a new location i.e. can be done by:
 ```
@@ -56,7 +56,7 @@ The body will be filled with the contents of the `postBody.json` file:
 
 Please note that you may add multiple key/value pairs in the object. Unknown values will be ignored.
 
-The reply to this POST will be another JSON object that contains information about the executed request. The most imporant is the url and the id of the newly created resource:
+The reply to this POST will be another JSON object that contains information about the executed request. The most important is the url and the id of the newly created resource:
 ```
 {
   "updated_properties_count":2,
