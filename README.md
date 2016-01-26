@@ -47,7 +47,7 @@ A location is an area in which items can be detected.  The actual detections are
 
 One or more [Intellif SmartSpots](https://intellifi.nl/home/products/) allow the location to actually detect items. The detection area is naturally limited to the range of the used RFID technology. Passive EPC Gen2 tags have a range of approximately 10 meters, beacons can easily have a range of 100+ meters. If multiple SmartSpots are reporting to a one location then the events are merged at the server level. Please note that the location is a server-side abstraction that allows you to be flexible when you have multiple SmartSpots. I.e.: it's possible to connect external antennas to the SmartSpot. By default they are used to enlarge the reach of the overall SmartSpot. You may configure individual external antennas to report their detections to a seperate location. By doing so you are essentially creating a second virtual spot.
 
-Location configuration is done automatically when you connect a SmartSpot to a brain for the first time. A location is created that caries the label 'spot`spot serial_number`'. I.e 'spot203'. You can easily change this label by doing a `PUT` on the location resource itself. We encourage you to add a meaningful name to a location (i.e. 'kitchen') as it's beeing used in user interface a several places.
+Location configuration is done automatically when you connect a SmartSpot to a brain for the first time. A location is created that carries the label 'spot`spot serial_number`'. I.e 'spot203'. You can easily change this label by doing a `PUT` on the location resource itself. We encourage you to add a meaningful name to a location (i.e. 'kitchen') as it's being used in the user interface at several places.
 
 Resources
 =========
