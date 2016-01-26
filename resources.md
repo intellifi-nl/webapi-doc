@@ -15,13 +15,13 @@ Contents
 Items
 -----
 
-The items resource will contain all [item](README.md#item) objects that where detected in one of the [zones](README.md#zone). They are automatically added as soon as they are are detected for the first time. The items resource couples a unique id to every item and gives a place to add more information to an item.
+The items resource will contain all [item](README.md#item) objects that where detected in one of the [zones](README.md#zone). They are automatically added as soon as they are detected for the first time. The items resource couples a unique id to every item and gives a place to add more information to an item.
 
-Every item contains at least a unique id (`id`), the detected `code` and the `technology` (this combiniation is unique). The `item_id` is the reference to the item that is used in all other places in the system.
+Every item contains at least a unique id (`id`), the detected `code` and the `technology` (this combination is unique). The `item_id` is the reference to the item that is used in all other places in the system.
 
 You may add a `label` and a `custom` value to the item. The label is used to show a human readable name on several places in our user interface. 
 
-The item is also a placeholder for the output of the localisation service. If the item is beeing detected on multiple places then we offer a most likely `location`, based on all avaialble information. The `location` only changes when the item moves to another place. If it moves out of reach then it sticks to the last known `location`. You can use `is_present` to see if the item is actively detected. We believe that this information is enough for most use cases, it just tells you where your items are.
+The item is also a placeholder for the output of the localization service. If the item is being detected on multiple places then we offer a most likely `location`, based on all available information. The `location` only changes when the item moves to another place. If it moves out of reach then it sticks to the last known `location`. You can use `is_present` to see if the item is actively detected. We believe that this information is enough for most use cases, it just tells you where your items are.
 
 Every item has the following fields defined:
 
