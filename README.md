@@ -1,16 +1,16 @@
 Brain web API documentation
 ===========================
 
-This document contain the official Intellifi Brain web API documentation. The Brain web API is a [RESTful API](https://en.wikipedia.org/wiki/Representational_state_transfer) that allows you to interact with our equipment in a powerful and simple way. Our [solution](http://intellifi.nl/) allows you to localise your items (or assets) based upon one of the supported RFID technologies.
+This document contain the official Intellifi Brain web API documentation. The Brain web API is a [RESTful API](https://en.wikipedia.org/wiki/Representational_state_transfer) that allows you to interact with our equipment in a powerful and simple way. Our end-to-end [solution](http://intellifi.nl/) allows you to localise your real world items based different RFID technologies. The results of these physicial detections are immediatly avaialble on our cloud based API (on-prem is available).
 
-By default the API is accessible on: http://`brain_host`/api/`resource`/`id`
+By default the API is accessible on: https://`brain_host`/api/`resource`/`id`
 * The `brain_host` will be provided to you when you are evaluating or purchasing our product. Please contact us if you want ot perform some experiments, we always have a play arround brain avaialble.
 * The `resource` shall contain the resource that you want to query. This is always the plural form of a noun. I.e. items, spots, events.
 * The **optional** `id` indicates which specific resource you wish to access. Please refer to the individual resources for more information on the type of id that is used. If you omit `id` the server will return a list with all items in the resource.
 
-The default data format is [JSON](https://en.wikipedia.org/wiki/JSON).
+The default serialisation format is [JSON](https://en.wikipedia.org/wiki/JSON).
 
-As with every web API you can only request new information by doing another request. We do offer a [pushing technologies](https://github.com/intellifi-nl/doc-push). They will allow you to be directly informed when something changes, instead of polling for the changes. Most use cases that we had until now can be implementated by using the web API only.
+As with every web API you can request new information by performing HTTP requests. We do offer [pushing technologies](https://github.com/intellifi-nl/doc-push). They will allow you to be directly informed when something changes, instead of polling for the changes. Most use cases that we had until now can be implementated by using the web API only.
 
 Contents
 --------
@@ -38,20 +38,16 @@ The whole Intellifi concept is based upon items and zones. Please take some time
 Item
 ----
 
-An item is a small and lightweight electronic device that contains and remembers a unique code. An item must be able to transmit this unqiue code wireless. This item may be a passive RFID tag, but it can also be an iBeacon. Even your smartphone could behave itself as an item. A device is an item as long as it's able to remember and transmit its unique code.
+An item is an object (or even a person) that you tagged with some kind of RFID emitter. At this moment our eco system can detect both the RFID EPC Gen2 tags and the modern Bluetooth LE beacons (including iBeacon and Eddystone). When an item is detected for the first time by one of our detectors then it's immediatly creaed as an item resource. Our system keeps this resource as a reference to this item, it's never deleted. You can use it to see where the item is or where it has been seen for the last time.
 
-An item is an abstraction that allows us to work with RFID tags and iBeacon tags as if they where the same. Every item is added as a resource in our API as soon as it's detected by one of our readers. The resource is the place to start if you wish to know where your item is. You may add attributes to the item by setting the label or the custom field.
+Location
+--------
 
-Zone
-----
+A location is an area in which items can be detected.  The actual detections are made and transmitted to our server by devices ([Intellifi SmartSpot](https://intellifi.nl/home/products/)) that you install at the physical location. The events are transferred to the server by a default network connection.
 
-A zone is an area in which items can be detected. This area is naturually limited to the range of the used RFID technology. Passive tags have a range of approximately 10 meters, active tags can easily have a range of 100+ meters. A zone must be able to reports its detected items.
+One or more [Intellif SmartSpots](https://intellifi.nl/home/products/) allow the location to actually detect items. The detection area is naturually limited to the range of the used RFID technology. Passive EPC Gen2 tags have a range of approximately 10 meters, beacons can easily have a range of 100+ meters. If multiple SmartSpots are reporting to a one location then the events are merged at the server level. Please note that the location is a server-side abstraction that allows you to be flexible when you have multiple SmartSpots. I.e.: it's possible to connect external antennas to the SmartSpot. By default they are used to enlarge the reach of the overall SmartSpot. You may  configure individual external antennas to report their detections to a seperate location. By doing so you are essentially creating a second virtual spot.
 
-A lot of devices are capable of behaving themselves as 'zones'. Our [Intellif Spot](http://intellifi.nl/home/products/) is a very good example of this. It can detect RFID tags and Bluetooth tags that are in the neighbourhoud. It reports these detections through its network interface to a server. It's also possible to connect external antennas to the Spot. By default they are used to enlarge the reach of the overall Spot zone. You may configure individual external antenna to behave themselve as a zone as well. By doing so you are essentially creating a virtual spot. 
-
-Another great example of a zone could be your smartphone. Lots of smartphones support the detection of iBeacons. It's a matter of the right app to report this information to a server. And voilà: here's another zone that you can use to detect your items.
-
-So you see that a zone is an abstraction, it can be 'implemented' by multiple devices. Therefore it's not available as a seperate resource in our web API.
+Location configuration is done automatically when you connect a SmartSpot to a brain for the first time. A location is created that caries the label 'spot`spot serial_number`'. I.e 'spot203'. You can easily change this label by doing a `PUT` on the location resource itself. We encourage you to add a meaningfull name to a location (i.e. 'kitchen') as it's beeing used in user interface a several places.
 
 Resources
 =========
@@ -64,8 +60,8 @@ Overview
 | Name | Description | 
 | ----- | ---- | ----------- |
 | [items](resources.md#items) | All detected items, now and in the past. |
-| [locations](resources.md#locations) | The locations that devices may report to. |
-| [spots](resources.md#spots) | Live information about your Intellifi Smart Spots. |
+| [locations](resources.md#locations) | The locations that SmartSpots may report to. |
+| [spots](resources.md#spots) | Live information about your Intellifi SmartSpots. |
 | [presences](resources.md#presences) | All the presences in your system. |
 | sets | Combine items into lists. |
 | services | Overview of running background processes on the brain. |
