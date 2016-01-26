@@ -4,7 +4,7 @@ Brain web API documentation
 This document contain the official Intellifi Brain web API documentation. The Brain web API is a [RESTful API](https://en.wikipedia.org/wiki/Representational_state_transfer) that allows you to interact with our equipment in a powerful and simple way. Our end-to-end [solution](http://intellifi.nl/) allows you to localize your real world items based different RFID technologies. The results of these physicial detections are immediately available on our cloud based API (on-prem is available).
 
 By default the API is accessible on: https://`brain_host`/api/`resource`/`id`
-* The `brain_host` will be provided to you when you are evaluating or purchasing our product. Please contact us if you want ot perform some experiments, we always have a play arround brain avaialble.
+* The `brain_host` will be provided to you when you are evaluating or purchasing our product. Please contact us if you want to perform some experiments, we always have a play around brain available.
 * The `resource` shall contain the resource that you want to query. This is always the plural form of a noun. I.e. items, spots, events.
 * The **optional** `id` indicates which specific resource you wish to access. Please refer to the individual resources for more information on the type of id that is used. If you omit `id` the server will return a list with all items in the resource.
 
@@ -38,7 +38,7 @@ The whole Intellifi concept is based upon items and zones. Please take some time
 Item
 ----
 
-An item is an object (or even a person) that you tagged with some kind of RFID emitter. At this moment our eco system can detect both the RFID EPC Gen2 tags and the modern Bluetooth LE beacons (including iBeacon and Eddystone). When an item is detected for the first time by one of our detectors then it's immediatly creaed as an item resource. Our system keeps this resource as a reference to this item, it's never deleted. You can use it to see where the item is or where it has been seen for the last time.
+An item is an object (or even a person) that you tagged with some kind of RFID emitter. At this moment our eco system can detect both RFID EPC Gen2 tags, also know as RAIN RFID tags, and modern Bluetooth LE beacons (including iBeacon and Eddystone). When an item is detected for the first time by one of our detectors then it's immediately created as an item resource. Our system keeps this resource as a reference to this item, it's never deleted. You can use it to see where the item is or where it has been seen for the last time.
 
 Location
 --------
