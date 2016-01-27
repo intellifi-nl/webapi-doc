@@ -7,10 +7,13 @@ Contents
 --------
 
 * [Items](#items)
-* [Spots](#spots)
+* [Sets](#sets)
 * [Locations](#locations)
+* [Spots](#spots)
 * [Presences](#presences)
-* [Events](#events)  
+* [Subscriptions](#subscriptions)
+* [Events](#events)
+* [Services](#services)
 
 Items
 -----
@@ -45,10 +48,10 @@ At this moment it's not possible to delete items.
 
 A special sub-resource is avaialbe to request all avaialble item moves (it's a view on the events resource): /api/items/moves
 * At this moment you can only populate the labels, ?populate=item.label,location.label
-** The `url` and `id` are always included as well (unless you add id_only=true).
-** This specific dot notation is not supported in other resources at this moment.
-** It could be usefull to enable the `auto_label_with_code_hex` in the Engine service. This allows you to retreive the code_hex values without doing lookups.
-** You may filter on a specific location or item id. /api/items/moves?item=5698f927e7831505f13a4aea
+  * The `url` and `id` are always included as well (unless you add id_only=true).
+  * This specific dot notation is not supported in other resources at this moment.
+  * It could be usefull to enable the `auto_label_with_code_hex` in the Engine service. This allows you to retreive the code_hex values without doing lookups.
+  * You may filter on a specific location or item id. /api/items/moves?item=5698f927e7831505f13a4aea
 
 Idears
 * You may be worried about the amount of items that could flow into your system. We are thinking about a way to configure SmartSpots to only allow certain code ranges with the flexible item sets approach. With this approach you can filter the amount of tags that come into your system.
@@ -58,6 +61,35 @@ Idears
 
 Sets
 ----
+
+Items can be grouped together into a set. At this moment we only support lists, later we might be adding support for i.e. masks.
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `url` | string | Url to the individual resource. |
+| `id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
+| `type` | string | What kind of set is this? At this moment we only support 'list'. |
+| `resource_type`  | string | What resource is this set combining? At this moment we only support 'items'. |
+| `label`| string | A name or a label for this set. Is shown in our user interface, may also be empty. |
+| `custom` | value | The `custom` value is only for your own reference, you may use it to save additional attributes. The `custom` value is not used on any other place. This field may contain any datatype that you like: null (default), text, number, boolean or object. |
+| `terms`| object | An object that contains the specific properties for this set, it depends on the type and resource_type which fields will be avaialble. |
+| `view_url`| string | A collection with items that are currently in this set. |
+| `is_syncable_to_spot`| boolean | Is not supported at this moment, is always false. Later we could sync sets to the SmartSpot hardware. |
+| `time_created` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | The time that this resource was created. |
+| `time_updated` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was the last change in this resource? |
+
+As said, at this moment we only have support for a item list, the terms object of these sets contains the following parameters:
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `ids_url` | string | Url that you can use to `POST` and `DELETE` item id's to and from. At this moment there is no support for `GET`, use the view_url instead. |
+| `allow_add`  | boolean | Not yet supported: is it allowed to perform this action? |
+| `allow_remove`  | boolean | Not yet supported: is it allowed to perform this action? |
+| `allow_remove_all` | boolean | Not yet supported: is it allowed to perform this action? |
+| `allow_local_add` | boolean | Not yet supported: is it allowed to perform this action? |
+| `allow_local_remove` | boolean | Not yet supported: is it allowed to perform this action? |
+| `allow_local_remove_all` | boolean | Not yet supported: is it allowed to perform this action? |
+| `capacity_limit` | value | Not yet supported: How many items may you add to this set? |
 
 Locations
 ---------
@@ -154,11 +186,11 @@ The object is cleared as soon as the request is forwarded to the spot. The norma
 Presences
 ---------
 
-An item can be present on a location. A presence resource is automatically created when one of the defined location triggers says that an item is detected. A presence is deleted when it has not been detected for n seconds. Where n is the hold time in seconds (you may configure this parameters on your Smart Spot). So the presence resource exactly tells you where your items are beeing detected at this very moment.
+An item can be detected by multiple locations, if the signal is strong enough.  It's a 'deeper' more detailed view than you get when you would stick to the items and moves. In that case the server determines the most likely location of the item, even if it's present on multiple locations.
 
-An item can be present on multiple locatons at the same time. This is logical if you know that the used technolgies all have a big range. Your items may be picked up by multiple devices at the same moment. In this resource we present all this information to you. If you just only want to know where something is excatly located then we have good news: we already did the hard work for you. The localisation service does a best fit and determines where your item is. The calculated location is directly saved within the [items](#items) resource. You don't need to query this resource in that situation. This resource reveals more of what is happening inside the system. For some use cases this is really usefull.
+An item can be detected by multiple locatons at the same time. This is logical if you know that the used technolgies all have a big range. Your items may be picked up by multiple devices at the same moment. A new presence resource is automatically created when one of the defined locations says that an item is detected. A presence is deleted when it has not been seen for n seconds. Where n is the hold time in seconds (you may configure this parameters on your SmartSpot). So the presence resource exactly tells you where your items are beeing detected at this very moment. In this resource we present all this information to you. If you just only want to know where something is excatly located then we have good news: we already did the hard work for you. The localisation service does a best fit and determines where your item is. The calculated location is directly saved within the [items](#items) resource. You don't need to query this resource in that situation. This resource reveals more of what is happening inside the system. For some use cases this is really usefull.
 
-Presence are deleted when their hold time expires, or in other words: when they have not been seen for a some time. This is an important difference to the first API version that we had. You can use the [events resource](#events) to query all events that took place in the system. Including create, update and delete events for presences. So you can always reconstruct the presences that where avaialble at some time. Please let us know if it would make you happy that we did this for you.
+Presence are deleted when their hold time expires, or in other words: when they have not been seen for a some time. This is an important difference to the first API version that we had. You can use the [events resource](#events) to query all events that took place in the system. Including create, update and delete events for presences. So you can always reconstruct the presences that where avaialble at some time.
 
 The presence contains these fields:
 
@@ -166,7 +198,7 @@ The presence contains these fields:
 | ----- | ---- | ----------- |
 | `url` | string | Url to the individual resource. |
 | `id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
-| `item` | [reference](README.md#reference) | Reference to the item that was detected |
+| `item` | [reference](README.md#reference) | Reference to the item that was detected. |
 | `location` | [reference](README.md#reference) | Reference to the locaton that this item was seen on. |
 | `proximity` | string | Strongest proximity of all 'child' presences, see next paragraph. |
 | `time_created` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | Created time, when was the first hit received for this presence? |
@@ -183,6 +215,24 @@ The returned value depends on the configured signal levels. It's possible to adj
 Subscriptions
 -------------
 
+Most resources contain actual state. The items for example are always avaialble and can show you where an item is seen. If you have your own backend that keeps state then you are probably only intrested in the changes to our data. We call these events. Internally we make every change by sending events to internal services. We make these events avaialble in several ways. If you create subscriptions in this collection then two things can happen:
+1. Applying events are saved into the events resource.
+2. Applying events are immediatly uploaded to an external HTTP end-point (webhooks).
+
+| Field | Type | Description | 
+| ----- | ---- | ----------- |
+| `url` | string | Url to the individual resource. |
+| `id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
+| `topic_filter` | string | MQTT filter that is applied to all events. Allow you to select the events. |
+| `description` | string | Add some notes if you like. |
+| `database_hold_time_h` | value | The number of hours that this event is kept in the database. Only use larger numbers if you know what you are doing. A couple of hours is enough for most use cases. |
+| `target_url` | string | This is a valid to an external service that all applying events are pushed to (webhook). Configure to null if you don't wish to use this (default). |
+| `target_retry` | string | Set to true if you want our server to retry if target_url is not giving back a 2xx error code. |
+| `verify_target_certificate` | string | Set to true if you want to force that the end-point is having a valid certificate. |
+| `time_created` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was this resource created? |
+| `time_updated` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was the last change on this resource? |
+
+Changes to subscriptions are applied automatically. The EventMemorizer service and webhook-svc are required to use this functionality (v2.0.0 and higher).
 
 Events
 ------
@@ -218,16 +268,26 @@ An event is never changed (can't be by definition!), so we don't offer a `time_u
 Services
 --------
 
-Explain the services.
+Brain background processes are called services. Every service keept it's own resource inside the services collection. It's a central place that allows you to check versions and tweak technical settings. You can post a JSON object to `config_request`, the service will change the setting when the time is there.
 
-Future resources
-----------------
+| Field | Type | Description | 
+| ----- | ---- | ----------- |
+| `url` | string | Url to the individual resource. |
+| `id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
+| `name` | string | Human readable name for the service. |
+| `version` | string | Current running version of the service. |
+| `config` | object | JSON object with possible settings. Refer to individual service documentation for a good overview. |
+| `config_request` | object | You may post a new object to this field in order to request a change in the service configuration. It shall be applied automatically (if you have choosen valid values and the service is running). |
+| `restart_request` | bool | You may set this to true in order to request a restart for the service. |
+| `boot_count` | value | Is increased with 1 when the service starts. Is never cleared (unless the database is adjusted). |
+| `time_created` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was this resource created? |
+| `time_updated` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was the last change on this resource? |
 
 Idears
 ------
 
-We are working hard on new features. Some of the new forseen features are already mentioned here as a sneak preview.
+We are working constantly on new improvements and features. Some of the new forseen features are already mentioned here as a sneak preview.
 
-* [Paths](#paths)
-* [Passings](#passings)
-* [Senses](#senses)
+* Paths, allows you to define a path through several locatons. Would create a passing object for items that match the exact path.
+* Passings, would allow you to see certain movements of items through the system (as defined in paths). Basically this would be an advanced filter. Which of my items have moved from a to b and to c?
+* Senses, would allow you to query the current SmartSpot sensor values. As used in the Sense & Control subsystem.
