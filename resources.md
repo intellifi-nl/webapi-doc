@@ -33,14 +33,51 @@ Every item has the following fields defined:
 | `technology`  | string | Type of technology that was used to detect this item. Can be 'EPC Gen2' or 'Bluetooth LE'. |
 | `label`| string | A name or a label for this item. Is shown in our user interface, may also be empty. |
 | `custom` | value | The `custom` value is only for your own reference, you may use it to save additional attributes. The `custom` value is not used on any other place. This field may contain any datatype that you like: null (default), text, number, boolean or object. |
+| `set_urls` or `set_ids` | array | An array with referenecs to the sets that this item is in. set_urls is not implemented at the time of writing, you should set id_only=true to retreive an array with `id` strings.  |
 | `is_present`| boolean | Is this item actively detected in one of the zones at this moment? True when it is, false if it's not. |
 | `location` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Reference to the [location](#locations) resource where the item is located. Or, if the item is out of reach, the last known location. |
+| `move_count` | value | How many times was this item moved since it's created on this server? Please note that it is likely that not all moved events are available in the events (they are deleted after a configurable number of hours). This field is never decreased. It gives a nice indication of the usage of this item. |
+| `time_moved` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was this item moved for the last time? This is the last time that the location was changed. |
 | `time_created` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was this resource created? |
 | `time_updated` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was this resource updated for the last time? Can be a location update or a label update. |
 
-You may be worried about the amount of items that could flow into your system. In the future you can configure the spots to only allow certain code ranges with the flexible item sets approach. With this approach you can filter the amount of tags that come into your system.
-
 At this moment it's not possible to delete items.
+
+A special sub-resource is avaialbe to request all avaialble item moves (it's a view on the events resource): /api/items/moves
+* At this moment you can only populate the labels, ?populate=item.label,location.label
+** The `url` and `id` are always included as well (unless you add id_only=true).
+** This specific dot notation is not supported in other resources at this moment.
+** It could be usefull to enable the `auto_label_with_code_hex` in the Engine service. This allows you to retreive the code_hex values without doing lookups.
+** You may filter on a specific location or item id. /api/items/moves?item=5698f927e7831505f13a4aea
+
+Idears
+* You may be worried about the amount of items that could flow into your system. We are thinking about a way to configure SmartSpots to only allow certain code ranges with the flexible item sets approach. With this approach you can filter the amount of tags that come into your system.
+* We are also thinking about a smart way to delete unused items after a certain amount of time.
+* We are thinking about parsing the iBeacon and 
+* Please let us know if you like these idears, or if you have additional thoughts.
+
+Sets
+----
+
+Locations
+---------
+
+The locations resource allows you to create, read and update the definitions for your locations. A location couples a [zone](README.md#zone)(i.e an Intellifi Spot) to a `label` and `custom` field that you can fill in with any information that you like.
+
+A zone or reader device reports to a location. In most situations your Intellifi Spot will behave itself as a single zone and will report to a single location. An antenna that is connected to the Intellifi spot may also be used as a zone (virtual spot). And thus can also trigger a location. Locations are coupled by a bottum-up approach. Every zone may report to a single locaton. You may let different zones report to a single location.
+
+This concept allows you to use the Intellifi Spots in a lot of situations. You can let multiple spots report to a single big location. Effectively a bigger zone. You can also let one Spot report to several smaller locations (virtual spot). Every antenna can be used as a seperate zone.
+
+A default location for an Intellifi Spot is automatically created when you connect it to the server for the fist time. You may edit or remove this location.
+
+| Field | Type | Description | 
+| ----- | ---- | ----------- |
+| `url` | string | Url to the individual resource. |
+| `id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
+| `label` | string | How do you name this resource? Or how do you refer to it in your own applicaton?
+| `custom` | value | The `custom` value is only for your own reference, you may use it to save additional attributes. The `custom` value is not used on any other place. This field may contain any datatype that you like: null (default), text, number, boolean or object. |
+| `time_created` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | The time that this resource was created. |
+| `time_updated` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was the last change in this resource? |
 
 Spots
 -----
@@ -114,26 +151,6 @@ You only need to add the senses that you want to change. I.e. updating the first
 
 The object is cleared as soon as the request is forwarded to the spot. The normal `senses` field will contain the current status of the senses.
 
-Locations
----------
-
-The locations resource allows you to create, read and update the definitions for your locations. A location couples a [zone](README.md#zone)(i.e an Intellifi Spot) to a `label` and `custom` field that you can fill in with any information that you like.
-
-A zone or reader device reports to a location. In most situations your Intellifi Spot will behave itself as a single zone and will report to a single location. An antenna that is connected to the Intellifi spot may also be used as a zone (virtual spot). And thus can also trigger a location. Locations are coupled by a bottum-up approach. Every zone may report to a single locaton. You may let different zones report to a single location.
-
-This concept allows you to use the Intellifi Spots in a lot of situations. You can let multiple spots report to a single big location. Effectively a bigger zone. You can also let one Spot report to several smaller locations (virtual spot). Every antenna can be used as a seperate zone.
-
-A default location for an Intellifi Spot is automatically created when you connect it to the server for the fist time. You may edit or remove this location.
-
-| Field | Type | Description | 
-| ----- | ---- | ----------- |
-| `url` | string | Url to the individual resource. |
-| `id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
-| `label` | string | How do you name this resource? Or how do you refer to it in your own applicaton?
-| `custom` | value | The `custom` value is only for your own reference, you may use it to save additional attributes. The `custom` value is not used on any other place. This field may contain any datatype that you like: null (default), text, number, boolean or object. |
-| `time_created` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | The time that this resource was created. |
-| `time_updated` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was the last change in this resource? |
-
 Presences
 ---------
 
@@ -162,6 +179,10 @@ We add an estimated proximity to every presence. This is a rough estimate on the
 3. 'immediate': the item is detected with a very strong signal. It must be very close to your antenna.
 
 The returned value depends on the configured signal levels. It's possible to adjust these levels to your situation, please refer to the detailed Intellifi spot documentation if you would like to do this.
+
+Subscriptions
+-------------
+
 
 Events
 ------
@@ -194,12 +215,19 @@ Be carefull with the given `time_create` and `time_device` fields. Intellifi Spo
 
 An event is never changed (can't be by definition!), so we don't offer a `time_update` field on this resource.
 
+Services
+--------
+
+Explain the services.
+
 Future resources
 ----------------
+
+Idears
+------
 
 We are working hard on new features. Some of the new forseen features are already mentioned here as a sneak preview.
 
 * [Paths](#paths)
 * [Passings](#passings)
-* [Sets](#sets)
 * [Senses](#senses)
