@@ -75,8 +75,8 @@ Collections
 | [locations](resources.md#locations) | The locations that SmartSpots may report to. |
 | [spots](resources.md#spots) | Live information about your Intellifi SmartSpots. |
 | [presences](resources.md#presences) | Live item detections on locations, items can be detected at multiple places at the same time. |
-| [events](resources.md#events) | Access to all saved items, every event gets deleted at `time_expire` automatically. |
 | [subscriptions](resources.md#subscriptions) | Which events shall be saved? Should they be forwarded to an external configurable URL?
+| [events](resources.md#events) | Access to all saved items, every event gets deleted at `time_expire` automatically. |
 | [services](resources.md#services) | Overview of running background processes on the brain. |
 
 Querying
@@ -86,9 +86,9 @@ You can query a collection by sending an HTTP request. This request may contain 
 
 | Keyword | Description  | Default | Example |
 | ------- | ------------ | ------- | ------- |
-| `after`, `before` | Limits on time, exclusive. | | ?after=2016-01-27T08:38:55.255Z
+| `after`, `before` | Limits on `time_created`, exclusive. | | ?after=2016-01-27T08:38:55.255Z
 | `after_id`, `before_id` | Limits directly on `id` excludes the given `id` value, pleae note that `id` is chronological. | |  ?after_id=56a88364e783152127d15340 |
-| `from`, `until` | Limits on time, inclusive. | | ?until=2016-01-27T08:38:55.255Z
+| `from`, `until` | Limits on `time_created`, inclusive. | | ?until=2016-01-27T08:38:55.255Z
 | `from_id`, `until_id` | Limits on `id`, includes the given `id` value. | | ?from_id=56a88364e783152127d15340 |
 | `id_only` | Removes `url` fields from output and shows `_id` instead of `_url` in references. | false | ?id_only=true
 | `results_only` | Removes wrapping JSON object with information about query, only sends back a JSON array with the applying resources | false | ?results_only=true |
@@ -96,7 +96,9 @@ You can query a collection by sending an HTTP request. This request may contain 
 | `populate` | Expand a reference into the actual resource (lookup). You may add multiple fields by giving a comma seperated value. | | ?populate=location,item |
 | `limit` | Sets the maximum number of returned resources. You may increase this number to large values, keep in mind that query times could become large. We advise you to use the [pagination](pagination.md) whenever you can. | 100 | ?limit=5
 
-You can also query on one or more resource fields in your query parameters. Just add the field/value cominbations that you want to query upon. Multiple fields are combined with a logical AND (at this moment we don't support OR). I.e. https://`brain_host`/api/items?location=5698f9c5e7831505e418755a&is_present=true
+You can also query on one or more resource fields in your query parameters. Just add the field/value cominbations that you want to query upon. Multiple fields are combined with a logical AND (at this moment we don't support OR). I.e:
+
+https://`brain_host`/api/items?location=5698f9c5e7831505e418755a&is_present=true
 
 The default query behaviour (when no query paramters are given) is that the last 100 resources are shown (newest resources are shown first). The collections are [paginated](pagination.md) when they contain more than 100 resources. You can follow the next_url to retreive the rest of the resources.
 
