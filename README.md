@@ -34,7 +34,7 @@ We do advise you to take a quick look at our [quick start](quick-start.md) for s
 Terminology
 ===========
 
-The whole Intellifi concept is based upon items and zones. Please take some time to familiarize yourself with these definitions. They will make it way easier to understand this API.
+The whole Intellifi concept is based upon [items](#item) and [locations](#location). Please take some time to familiarize yourself with these definitions. They will make it way easier to understand this API.
 
 Item
 ----
