@@ -223,12 +223,12 @@ Most resources contain actual state. The items for example are always avaialble 
 | ----- | ---- | ----------- |
 | `url` | string | Url to the individual resource. |
 | `id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
-| `topic_filter` | string | MQTT filter that is applied to all events. Allow you to select the events. |
+| `topic_filter` | string | MQTT filter that is applied to all events. Allows you to select the events. |
 | `description` | string | Add some notes if you like. |
 | `database_hold_time_h` | value | The number of hours that this event is kept in the database. Only use larger numbers if you know what you are doing. A couple of hours is enough for most use cases. |
-| `target_url` | string | This is a valid to an external service that all applying events are pushed to (webhook). Configure to null if you don't wish to use this (default). |
-| `target_retry` | string | Set to true if you want our server to retry if target_url is not giving back a 2xx error code. |
-| `verify_target_certificate` | string | Set to true if you want to force that the end-point is having a valid certificate. |
+| `target_url` | string | This is a valid url to an external service that all applicable events are pushed to (webhook). Configure to null if you don't wish to use this (default). |
+| `target_retry` | string | Set to true if you want our server to retry if target_url is not giving back a 2xx success code. |
+| `verify_target_certificate` | string | Set to true if you want to force that the end-point is having a valid TLS certificate. |
 | `time_created` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was this resource created? |
 | `time_updated` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was the last change on this resource? |
 
