@@ -26,10 +26,12 @@ Now paste the url into the import function:
 ![](https://raw.githubusercontent.com/intellifi-nl/doc-webapi/master/postman-import.png)
 Note: postman gets a lot of updates, so it might look a bit different. Just search for the import and you should be fine.
 
-You should also create and configure an environment. This allows you to tell postman the address of your brain.
+You should also create and configure an environment. This allows you to tell postman the address of your brain and API key.
 ![](https://raw.githubusercontent.com/intellifi-nl/doc-webapi/master/postman-env.png)
 
-This environment screen allows you to configure key/value pairs. You only need to define the key `brain_host` to your brain server address, i.e. `brain.intellifi.nl`. Please make sure that you don't include the protocol name and the trailing slash!
+This environment screen allows you to configure key/value pairs. You need to define the keys:
+- `brain_host` to your brain server address (i.e. `brain.intellifi.nl`). Please make sure that you don't include the protocol name and the trailing slash!,
+- `api_key` to your API key.
 
 Tip: You can press the little arrow to get a very nice overview in which I added some extra comments to the urls.
 ![](https://raw.githubusercontent.com/intellifi-nl/doc-webapi/master/postman-overview.png)
