@@ -100,6 +100,8 @@ You can also query on one or more resource fields in your query parameters. Just
 
 https://`brain_host`/api/items?location=5698f9c5e7831505e418755a&is_present=true
 
+String fields can be queried with wildcards: label=*tag* would match mytag1, mytag2 etc. Pleae note that this is not supported for the `code_hex` field in the items resource, it's a binary field at this moment.
+
 The default query behaviour (when no query paramters are given) is that the last 100 resources are shown (newest resources are shown first). The collections are [paginated](pagination.md) when they contain more than 100 resources. You can follow the next_url to retrieve the rest of the resources.
 
 References
