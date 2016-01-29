@@ -46,7 +46,7 @@ Every item has the following fields defined:
 
 At this moment it's not possible to delete items.
 
-A special sub-resource is avaialbe to request all avaialble item moves (it's a view on the events resource): /api/items/moves
+A special sub-resource is available to request all available item moves (it's a view on the events resource): /api/items/moves
 * At this moment you can only populate the labels, ?populate=item.label,location.label
   * The `url` and `id` are always included as well (unless you add id_only=true).
   * This specific dot notation is not supported in other resources at this moment.
@@ -72,7 +72,7 @@ Items can be grouped together into a set. At this moment we only support lists, 
 | `resource_type`  | string | What resource is this set combining? At this moment we only support 'items'. |
 | `label`| string | A name or a label for this set. Is shown in our user interface, may also be empty. |
 | `custom` | value | The `custom` value is only for your own reference, you may use it to save additional attributes. The `custom` value is not used on any other place. This field may contain any datatype that you like: null (default), text, number, boolean or object. |
-| `terms`| object | An object that contains the specific properties for this set, it depends on the type and resource_type which fields will be avaialble. |
+| `terms`| object | An object that contains the specific properties for this set, it depends on the type and resource_type which fields will be available. |
 | `view_url`| string | A collection with items that are currently in this set. |
 | `is_syncable_to_spot`| boolean | Is not supported at this moment, is always false. Later we could sync sets to the SmartSpot hardware. |
 | `time_created` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | The time that this resource was created. |
@@ -190,7 +190,7 @@ An item can be detected by multiple locations, if the signal is strong enough.  
 
 An item can be detected by multiple locatons at the same time. This is logical if you know that the used technolgies all have a big range. Your items may be picked up by multiple devices at the same moment. A new presence resource is automatically created when one of the defined locations says that an item is detected. A presence is deleted when it has not been seen for n seconds. Where n is the hold time in seconds (you may configure this parameters on your SmartSpot). So the presence resource exactly tells you where your items are beeing detected at this very moment. In this resource we present all this information to you. If you just only want to know where something is excatly located then we have good news: we already did the hard work for you. The localisation service does a best fit and determines where your item is. The calculated location is directly saved within the [items](#items) resource. You don't need to query this resource in that situation. This resource reveals more of what is happening inside the system. For some use cases this is really usefull.
 
-Presence are deleted when their hold time expires, or in other words: when they have not been seen for a some time. This is an important difference to the first API version that we had. You can use the [events resource](#events) to query all events that took place in the system. Including create, update and delete events for presences. So you can always reconstruct the presences that where avaialble at some time.
+Presence are deleted when their hold time expires, or in other words: when they have not been seen for a some time. This is an important difference to the first API version that we had. You can use the [events resource](#events) to query all events that took place in the system. Including create, update and delete events for presences. So you can always reconstruct the presences that where available at some time.
 
 The presence contains these fields:
 
@@ -215,7 +215,7 @@ The returned value depends on the configured signal levels. It's possible to adj
 Subscriptions
 -------------
 
-Most resources contain actual state. The items for example are always avaialble and can show you where an item is seen. If you have your own backend that keeps state then you are probably only intrested in the changes to our data. We call these events. Internally we make every change by sending events to internal services. We make these events avaialble in several ways. If you create subscriptions in this collection then two things can happen:
+Most resources contain actual state. The items for example are always available and can show you where an item is seen. If you have your own backend that keeps state then you are probably only intrested in the changes to our data. We call these events. Internally we make every change by sending events to internal services. We make these events available in several ways. If you create subscriptions in this collection then two things can happen:
 1. Applying events are saved into the events resource.
 2. Applying events are immediatly uploaded to an external HTTP end-point (webhooks).
 
@@ -237,7 +237,7 @@ Changes to subscriptions are applied automatically. The EventMemorizer service a
 Events
 ------
 
-The events resource keeps a copy of all relevant events that occured. This is an exact copy of the events that are avaialble on the message bus. Please note that lots of events are flowing through the system. The history of events is kept for a limited time. If you would like to retreive all events then you should consider connecting to our message bus through one of the avaialble [push technologies](https://github.com/intellifi-nl/doc-push).
+The events resource keeps a copy of all relevant events that occured. This is an exact copy of the events that are available on the message bus. Please note that lots of events are flowing through the system. The history of events is kept for a limited time. If you would like to retreive all events then you should consider connecting to our message bus through one of the available [push technologies](https://github.com/intellifi-nl/doc-push).
 
 Every event is envelopped in an JSON object with the following fields:
 
