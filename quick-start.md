@@ -20,7 +20,7 @@ Getting started with our API can be done quickly by downloading [Postman](https:
 
 First you should use the import function of postman to get the collection with example urls.
 
-Copy this value to your clipboard: `https://www.getpostman.com/collections/45fa9260f58619764111`
+Copy this value to your clipboard: `https://www.getpostman.com/collections/34a4b3c71558d6115f72`
 
 Now paste the url into the import function:
 ![](https://raw.githubusercontent.com/intellifi-nl/doc-webapi/master/postman-import.png)
