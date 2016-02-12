@@ -4,10 +4,10 @@ Brain web API documentation
 This document contains the official Intellifi Brain web API documentation. The Brain web API is a [RESTful API](https://en.wikipedia.org/wiki/Representational_state_transfer) that allows you to interact with our equipment in a powerful and simple way. Our end-to-end [solution](http://intellifi.nl/) allows you to localize your real world items based different RFID technologies. The results of these physical detections are immediately available on our cloud based API (on-prem is available).
 
 By default the API is accessible on: https://`brain_host`/api/`resource`.`format`/`id`
-* The `brain_host` will be provided to you when you are evaluating or purchasing our product. Please contact us if you want to perform some experiments, we always have a play around brain available.
-* The `resource` shall contain the resource that you want to query. This is always the plural form of a noun, e.g. items, spots, events.
-* The **optional** `format` field allows you to request a different output format (json, csv or txt). The default (and most used) serialization is [JSON](https://en.wikipedia.org/wiki/JSON). For this reason you may completely leave out the extension.
-* The **optional** `id` indicates which specific resource you wish to access. Please refer to the individual resources for more information on the type of id that is used. If you omit `id` the server will return a list with all items in the resource.
+* `brain_host` will be provided to you when you are evaluating or purchasing our product. Please contact us if you want to do some experiments. We can provide with information about our public sandbox.
+* `resource` shall contain the resource that you want to query.
+* **optional** `format` field allows you to request a different output format (json, csv or txt). The default (and most used) serialization is [JSON](https://en.wikipedia.org/wiki/JSON). For this reason you may completely leave out the extension.
+* **optional** `id` indicates which specific resource you wish to access. Please refer to the individual resources for more information on the type of id that is used. If you omit `id` the server will return a list with all items in the resource.
 
 You can authenticate your HTTP requests with an API key. You may add this key to query paramters (?key=`your_key`)) or as an extra header `X-Api-Key`=`your_key`. Your login session to the brain will also authenticate API requests. This makes exploring the API easier. More important details on security can be found on [this page](security.md).
 
@@ -70,14 +70,14 @@ Collections
 
 | Name | Description | 
 | ----- | ---- | ----------- |
-| [items](resources.md#items) | All detected items, now and in the past. |
-| [sets](resources.md#sets) | Groups items together in for example a set. |
-| [locations](resources.md#locations) | The locations that SmartSpots may report to. |
-| [spots](resources.md#spots) | Live information about your Intellifi SmartSpots. |
-| [presences](resources.md#presences) | Live item detections on locations, items can be detected at multiple places at the same time. |
-| [subscriptions](resources.md#subscriptions) | Which events shall be saved? Should they be forwarded to an external configurable URL?
-| [events](resources.md#events) | Access to all saved items, every event gets deleted at `time_expire` automatically. |
-| [services](resources.md#services) | Overview of running background processes on the brain. |
+| [/api/spots](resources.md#spots) | Status and config information for Intellifi SmartSpot devices. |
+| [/api/locations](resources.md#locations) | Locations that SmartSpots may report to. |
+| [/api/items](resources.md#items) | All detected items. |
+| [/api/presences](resources.md#presences) | Live item detections on locations. Be aware that items can be detected at multiple places at the same time. |
+| [/api/sets](resources.md#sets) | Create your Item sets; a collection of Items that should grouped. |
+| [/api/subscriptions](resources.md#subscriptions) |  Subscriptions for events (see: /api/events) and Webhooks.
+| [/api/events](resources.md#events) | Collection of events. |
+| [/api/services](resources.md#services) | Background processes overview and configuration |
 
 Querying
 --------
