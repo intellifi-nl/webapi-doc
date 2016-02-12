@@ -26,7 +26,7 @@ Contents
   * [Querying](#querying)
   * [References](#references)  
 
-Getting started
+[Getting started](quick-start.md)
 ===============
 
 We do advise you to take a quick look at our [quick start](quick-start.md) for some hints and tooling. In the rest of the documentation we assume that you understand HTTP, JSON and that you know which tools you can use to work with them.
