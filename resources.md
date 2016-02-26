@@ -283,7 +283,7 @@ Brain background processes are called services. Every service keept it's own res
 | `time_created` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was this resource created? |
 | `time_updated` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was the last change on this resource? |
 
-Idears
+Ideas
 ------
 
 We are working constantly on new improvements and features. Some of the new forseen features are already mentioned here as a sneak preview.
