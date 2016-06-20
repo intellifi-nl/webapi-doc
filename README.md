@@ -1,17 +1,17 @@
 Brain web API documentation
 ===========================
 
-This document contains the official Intellifi Brain web API documentation. The Brain web API is a [RESTful API](https://en.wikipedia.org/wiki/Representational_state_transfer) that allows you to interact with our equipment in a powerful and simple way. Our end-to-end [solution](http://intellifi.nl/) allows you to localize your real world items based different RFID technologies. The results of these physical detections are immediately available on our cloud based API (on-prem is available).
+This document contains the official Intellifi Brain web API documentation. The web API is a [RESTful API](https://en.wikipedia.org/wiki/Representational_state_transfer) that allows you to interact with our devices in a powerful and simple way. Our end-to-end [solution](http://intellifi.nl/) allows you to localize your items based on RFID and Bluetooth Smart technologies.
 
-By default the API is accessible on: https://`brain_host`/api/`resource`.`format`/`id`
-* `brain_host` will be provided to you when you are evaluating or purchasing our product. Please contact us if you want to do some experiments. We can provide with information about our public sandbox.
+By default the web API is accessible on: https://`brain_host`/api/`resource`.`format`/`id`
+* `brain_host` will be provided to you when you are evaluating or purchasing our product. Please contact us if you want to do some experiments. We can provide information about our public sandbox.
 * `resource` shall contain the resource that you want to query.
 * **optional** `format` field allows you to request a different output format (json, csv or txt). The default (and most used) serialization is [JSON](https://en.wikipedia.org/wiki/JSON). For this reason you may completely leave out the extension.
 * **optional** `id` indicates which specific resource you wish to access. Please refer to the individual resources for more information on the type of id that is used. If you omit `id` the server will return a list with all items in the resource.
 
-You can authenticate your HTTP requests with an API key. You may add this key to query paramters (?key=`your_key`)) or as an extra header `X-Api-Key`=`your_key`. Your login session to the brain will also authenticate API requests. This makes exploring the API easier. More important details on security can be found on [this page](security.md).
+You can authenticate your HTTP requests with an API key. You may add this key to query paramters (?key=`your_key`)) or as an extra header `X-Api-Key`=`your_key`. Your login session to the Brain will also authenticate web API requests from your browser. This makes exploring the web API easier. More important details on security can be found on [this page](security.md).
 
-As with every web API you can request new information by performing HTTP requests. We also offer [pushing technologies](https://github.com/intellifi-nl/doc-push). They will allow you to be directly informed when something changes, instead of polling for the changes. Most use cases that we had until now can be implemented by using the web API only.
+As with every web API you can request new information by performing HTTP requests. We also offer [pushing technologies](https://github.com/intellifi-nl/doc-push). Instead of polling for the changes, pushing technology will allow you to be directly informed when something changes.
 
 Contents
 --------
@@ -39,12 +39,13 @@ The whole Intellifi concept is based upon [items](#item) and [locations](#locati
 Item
 ----
 
-An item is an object (or even a person) that you tagged with some kind of RFID emitter. At this moment our eco system can detect both RFID EPC Gen2 tags, also know as RAIN RFID tags, and modern Bluetooth LE beacons (including iBeacon and Eddystone). When an item is detected for the first time by one of our detectors then it's immediately created as an item resource. Our system keeps this resource as a reference to this item, it's never deleted. You can use it to see where the item is or where it has been seen for the last time.
+An item is an object (or even a person) that you tag using a RFID emitter. Currently our eco system can detect both RFID EPC Gen2 tags, also know as RAIN RFID tags, and modern Bluetooth LE beacons (iBeacon and Eddystone). 
+When an item is detected for the first time by one of our devices, it's immediately available as a resource in our web API. Our system keeps this resource as a reference to this item. You can use it to see where the item is or where it has been seen for the last time.
 
 Location
 --------
 
-A location is an area in which items can be detected.  The actual detections are made and transmitted to our server by devices ([Intellifi SmartSpot](https://intellifi.nl/home/products/)) that you install at the physical location. The events are transferred to the server by a default network connection. The detection area is naturally limited to the range of the used RFID technology. Passive EPC Gen2 tags have a range of approximately 10 meters, beacons can easily have a range of 100+ meters. If multiple SmartSpots are reporting to a one location then the events are merged at the server level. Please note that the location is a server-side abstraction that allows you to be flexible when you have multiple SmartSpots. I.e.: it's possible to connect external antennas to the SmartSpot. By default they are used to enlarge the reach of the overall SmartSpot. You may configure individual external antennas to report their detections to a seperate location. By doing so you are essentially creating a second virtual spot.
+A location is an area in which items can be detected. The actual detections are made and transmitted to our server by devices ([Intellifi SmartSpot](https://intellifi.nl/home/products/)) that you install at the physical location. The detection area is limited to the range of the used RFID technology. Passive EPC Gen2 tags have a range of approximately 12 meters, Bluetooth LE beacons can easily have a range of 100+ meters. If multiple SmartSpots are reporting to a one location then the events are merged at the server level. Please note that the location is a server-side abstraction that allows you to be flexible when you have multiple SmartSpots. I.e.: it's possible to connect external antennas to the SmartSpot. By default they are used to enlarge the reach of the overall SmartSpot. You may configure individual external antennas to report their detections to a seperate location. By doing so you are essentially creating a second virtual spot.
 
 Location configuration is done automatically when you connect a SmartSpot to a brain for the first time. A location is created that contains the serial number of the spot. I.e 'spot203'. You can easily change this label by doing a `PUT` on the location resource itself. We encourage you to add a meaningful name to a location (e.g. 'kitchen') as it's being used in the user interface at several places.
 
