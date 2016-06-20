@@ -290,4 +290,3 @@ We are working constantly on new improvements and features. Some of the new fors
 
 * Paths, allows you to define a path through several locatons. Would create a passing object for items that match the exact path.
 * Passings, would allow you to see certain movements of items through the system (as defined in paths). Basically this would be an advanced filter. Which of my items have moved from a to b and to c?
-* Senses, would allow you to query the current SmartSpot sensor values. As used in the Sense & Control subsystem.
