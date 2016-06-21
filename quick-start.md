@@ -52,20 +52,15 @@ Important note: some example url's include document ids, they should be replaced
 
 Curl
 ----
+A few basic examples using Curl.
 
 1. Add a new location.
   The body contains the label for our new location.
   ```
-  {
-    "label":"My First Location"
-  }
-  ```
-  
-  Execute the request.
-  ```
-  curl -X POST -H "Content-Type: application/json" -d '{"label": "My First Location"}' http://`brain_host`/api/locations
+  curl -X POST -H "Content-Type: application/json" -d '{"label": "My First Location"}' https://`brain_host`/api/locations
   ```
 
+  Result:
   The reply to this POST will be another JSON object that contains information about the executed request. The most important is the url and the id of the newly created location resource:
   ```
   {
@@ -74,11 +69,29 @@ Curl
     "id":"550052669dba59d03057cb74",
   }
   ```
-2. Change the label of our new location.
+2. Get the new location resource.
+  Use the ID returned in step 1.
+  ```
+  curl -X GET -H "Content-Type: application/json" https://`brain_host`/api/locations/550052669dba59d03057cb74
+  ```
+  
+  Result:
+  ```
+  {
+    "url": "https://'brain_host'/api/locations/550052669dba59d03057cb74",
+    "id": "550052669dba59d03057cb74",
+    "label": "My First Location,
+    "custom": null,
+    "time_created": "2016-06-15T13:33:23.399Z",
+    "time_updated": "2016-06-15T13:33:23.399Z"
+  }
+  ```
+
+3. Change the label of our new location.
   Now we want to change the label to a more sensible value. Please note that you will have to add the id of the resource to your url.
 
   ```
-  curl -X PUT -H "Content-Type: application/json" -d '{"label": "Kitchen"} http://`brain_host`/api/locations/550052669dba59d03057cb74
+  curl -X PUT -H "Content-Type: application/json" -d '{"label": "Kitchen"} https://`brain_host`/api/locations/550052669dba59d03057cb74
   ```
 
   This will result in a reply similar to the POST command. Now the label is changed to 'Kitchen'.
