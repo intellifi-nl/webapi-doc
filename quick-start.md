@@ -3,6 +3,13 @@ Getting Started
 
 This page describes some tools and basics that you need to know in order to get started with our web API. First of all you will need some knowledge of [HTTP](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol) and [JSON](https://en.wikipedia.org/wiki/JSON). They are the building blocks of our ecosystem (and many others of course).
 
+Contents
+--------
+
+* [Exploring](#exploring)
+* [Postman](#postman)
+* [Curl](#curl)
+
 Exploring
 ---------
 
@@ -46,42 +53,32 @@ Important note: some example url's include document ids, they should be replaced
 Curl
 ----
 
-Of course you can also perform all given examples in curl, the good old unix tool for doing HTTP requests. You could also install curl on Windows if you'd like.
+1. Add a new location.
+  The body contains the label for our new location.
+  ```
+  {
+    "label":"My First Location"
+  }
+  ```
+  
+  Execute the request.
+  ```
+  curl -X POST -H "Content-Type: application/json" -d '{"label": "My First Location"}' http://`brain_host`/api/locations
+  ```
 
-Adding a new location, for example, can be done by:
-```
-curl -XPOST -H "Content-Type: application/json" --data @`postBody.json` http://`brain_host`/api/locations
-```
+  The reply to this POST will be another JSON object that contains information about the executed request. The most important is the url and the id of the newly created location resource:
+  ```
+  {
+    "updated_properties_count":2,
+    "url":"http://localhost:3000/api/locations/550052669dba59d03057cb74",
+    "id":"550052669dba59d03057cb74",
+  }
+  ```
+2. Change the label of our new location.
+  Now we want to change the label to a more sensible value. Please note that you will have to add the id of the resource to your url.
 
-The body will be filled with the contents of the `postBody.json` file:
-```
-{
-  "key":"value",
-  "label":"My first! Yeah"
-}
-```
+  ```
+  curl -X PUT -H "Content-Type: application/json" -d '{"label": "Kitchen"} http://`brain_host`/api/locations/550052669dba59d03057cb74
+  ```
 
-Please note that you may add multiple key/value pairs in the object. Unknown values will be ignored.
-
-The reply to this POST will be another JSON object that contains information about the executed request. The most important is the url and the id of the newly created resource:
-```
-{
-  "updated_properties_count":2,
-  "url":"http://localhost:3000/api/locations/550052669dba59d03057cb74",
-  "id":"550052669dba59d03057cb74",
-}
-```
-
-We now want to change the value of the label to a more sensible value. Please note that you will have to add the id of the resource to your url.
-```
-curl -XPUT -H "Content-Type: application/json" --data @`putBody.json` http://`brain_host`/api/locations/550052669dba59d03057cb74
-```
-
-The contents of the file `putBody.json`:
-```
-{
-  "label":"Kitchen"
-}
-```
-
-This will result in a reply similar to the POST command. Now the label is changed to Kitchen.
+  This will result in a reply similar to the POST command. Now the label is changed to 'Kitchen'.
