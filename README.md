@@ -15,75 +15,86 @@ As with every web API you can request new information by performing HTTP request
 
 Contents
 --------
-* [Getting started](#getting-started)
-* [Terminology](#terminology)
-  * [Item](#item)
-  * [Location](#location)
-* [Resources](#resources)
-  * [Id](#id)    
-  * [Time fields](#time-fields)
-  * [Collections](#collections)
-  * [Querying](#querying)
-  * [References](#references)  
+* [1. Getting started](#getting-started)
+* [2. Terminology](#terminology)
+  * [2.1 Item](#item)
+  * [2.2 Location](#location)
+* [3. Resources](#resources)
+  * [3.1 Id](#id)    
+  * [3.2 Time fields](#time-fields)
+  * [3.3 Collections](#collections)
+  * [3.4 Querying](#querying)
+  * [3.5 References](#references)  
 
-[Getting started](quick-start.md)
+1. Getting started
 ===============
 
 We do advise you to take a quick look at our [quick start](quick-start.md) for some hints and tooling. In the rest of the documentation we assume that you understand HTTP, JSON and that you know which tools you can use to work with them.
 
-Terminology
+Go to [Getting started](quick-start.md)
+
+2. Terminology
 ===========
 
-The whole Intellifi concept is based upon [items](#item) and [locations](#location). Please take some time to familiarize yourself with these definitions. They will make it way easier to understand this API.
+The Intellifi concept is based upon [items](#item) and [locations](#location). Please take some time to familiarize yourself with these definitions. They will make it way easier to understand this API.
 
-Item
+2.1 Item
 ----
 
 An item is an object (or even a person) that you tag using a RFID emitter. Currently our eco system can detect both RFID EPC Gen2 tags, also know as RAIN RFID tags, and modern Bluetooth LE beacons (iBeacon and Eddystone). 
 When an item is detected for the first time by one of our devices, it's immediately available as a resource in our web API. Our system keeps this resource as a reference to this item. You can use it to see where the item is or where it has been seen for the last time.
 
-Location
+2.2 Location
 --------
 
-A location is an area in which items can be detected. The actual detections are made and transmitted to our server by devices ([Intellifi SmartSpot](https://intellifi.nl/home/products/)) that you install at the physical location. The detection area is limited to the range of the used RFID technology. Passive EPC Gen2 tags have a range of approximately 12 meters, Bluetooth LE beacons can easily have a range of 100+ meters. If multiple SmartSpots are reporting to a one location then the events are merged at the server level. Please note that the location is a server-side abstraction that allows you to be flexible when you have multiple SmartSpots. I.e.: it's possible to connect external antennas to the SmartSpot. By default they are used to enlarge the reach of the overall SmartSpot. You may configure individual external antennas to report their detections to a seperate location. By doing so you are essentially creating a second virtual spot.
+A location is an abstaction of a physical location in which items can be detected or moved to.
 
-Location configuration is done automatically when you connect a SmartSpot to a brain for the first time. A location is created that contains the serial number of the spot. I.e 'spot203'. You can easily change this label by doing a `PUT` on the location resource itself. We encourage you to add a meaningful name to a location (e.g. 'kitchen') as it's being used in the user interface at several places.
+The actual detections are made and transmitted to our server by devices called [SmartSpot](https://intellifi.nl/home/products/) that you install at the physical location. 
 
-Resources
+The detection area is limited to the range of the used RFID technology. Passive EPC Gen2 tags have a range of approximately 12 meters, Bluetooth LE beacons can easily have a range of 100+ meters. 
+
+A location is not limited to one SmartSpot. It is possible to use multiple SmartSpots to report to one location (i.e. To cover a large area, hall, entrances/exits, etc..).
+
+If multiple SmartSpots are reporting to a one location then the events will be merged at server level. Please note that the location is a server-side abstraction that allows you to be flexible when you have multiple SmartSpots.
+
+Some types of SmartSpot devices offer the option to connect (extra) external antennas. By default they are used to enlarge the detection range, but it's also possible to configure individual external antennas to report their detections to seperate locations.
+
+Location configuration is done automatically when you connect a SmartSpot to a Brain server for the first time. A default location will be created, the location label contains the serial number of the SmartSpot (i.e 'spot203'). You can easily change this label by doing a `PUT` on the location resource itself. We encourage you to add a meaningful name to a location (e.g. 'kitchen') as it's being used in the user interface at several places.
+
+3. Resources
 =========
-
-Resources are the core of the web API. We tried to limit the number of resource types to the core concepts. An elaborate description of each individual resource type is available on [this page](resources.md).
 
 The top level resources are all collections, they contain the individual resources. Queries to these resources are wrapped inside a query object with information about the query and an array with the results.
 
-Id
+3.1 Id
 --
 
-Individual resources always start with the `url` and `id` field. They are both unique identifiers of a resource (the `url` is actually built with the `id`). The `id` is always generated by the brain server and is chronological as well. This means that you can sort on the id if you wish. You may add the `id_only=true` condition to the query part of the url if you don't wish to receive the `url` field(s). This option will also apply to resource references. The `url` fields are shown by default to increase explorability of the API. If you are creating an automated import then you probably want to add `id_only=true` to all of your requests.
+Individual resources always start with the `url` and `id` field. They are both unique identifiers of a resource (the `url` is actually built with the `id`). The `id` is always generated by the Brain server and is chronological as well. This means that you can sort on the id if you wish. You may add the `id_only=true` condition to the query part of the url if you don't wish to receive the `url` field(s). This option will also apply to resource references. The `url` fields are shown by default to increase explorability of the API. If you are creating an automated import then you probably want to add `id_only=true` to all of your requests.
 
-Time fields
+3.2 Time fields
 -----------
 
 Most time fields are appended with `_time`, the value is always an [ISO 8601 timestring](https://en.wikipedia.org/wiki/ISO_8601) in the UTC time zone, e.g. '2016-01-27T08:38:55.255Z'. The precision may vary, we add the number of milliseconds if avaialble.
 
-Collections
+3.3 Resource collections
 -----------
+In the table below is a list of all the resource collections. An detailed description of each individual resource type and their fields, is available on [this page](resources.md).
 
 | Name | Description | 
 | ----- | ---- | ----------- |
-| [/api/spots](resources.md#spots) | Status and config information for Intellifi SmartSpot devices. |
-| [/api/locations](resources.md#locations) | Locations that SmartSpots may report to. |
-| [/api/items](resources.md#items) | All detected items. |
-| [/api/presences](resources.md#presences) | Live item detections on locations. Be aware that items can be detected at multiple places at the same time. |
-| [/api/sets](resources.md#sets) | Create your Item sets; a collection of Items that should grouped. |
-| [/api/subscriptions](resources.md#subscriptions) |  Subscriptions for events (see: /api/events) and Webhooks.
-| [/api/events](resources.md#events) | Collection of events. |
-| [/api/services](resources.md#services) | Background processes overview and configuration |
+| [spots](resources.md#spots) | Status and config information for Intellifi SmartSpot devices. |
+| [locations](resources.md#locations) | Locations that SmartSpots devices may report to. |
+| [items](resources.md#items) | All detected items. |
+| [presences](resources.md#presences) | Live item detections at locations. Be aware that items can be detected at multiple locations at the same time! |
+| [sets](resources.md#sets) | Create your Item sets; a collection of Items that should grouped. |
+| [subscriptions](resources.md#subscriptions) |  Subscriptions to receive events and configure Webhooks.
+| [events](resources.md#events) | Collection of events. |
+| [services](resources.md#services) | Background processes overview and configuration. |
 
-Querying
+3.4 Querying
 --------
 
-You can query a collection by sending an HTTP request. This request may contain query parameters to further specify your query.
+You can query a resource collection by sending an HTTP request. This request may contain query parameters to further specify your query.
 
 | Keyword | Description  | Default | Example |
 | ------- | ------------ | ------- | ------- |
@@ -105,7 +116,7 @@ String fields can be queried with wildcards: label=*tag* would match mytag1, myt
 
 The default query behaviour (when no query paramters are given) is that the last 100 resources are shown (newest resources are shown first). The collections are [paginated](pagination.md) when they contain more than 100 resources. You can follow the next_url to retrieve the rest of the resources.
 
-References
+3.5 References
 ----------
 
 Most resources contain one or more fields that reference another resource in the API. For example, an item resource will be pointing to some location. These references can be shown in three ways, depending on the arguments that you supply in the query part of your request url.
