@@ -1,4 +1,4 @@
-Brain web API quick start
+Getting started
 =========================
 
 This page describes some tools and basics that you need to know in order to get started with our web API. First of all you will need some knowledge of [HTTP](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol) and [JSON](https://en.wikipedia.org/wiki/JSON). They are the building blocks of our ecosystem (and many others of course).
