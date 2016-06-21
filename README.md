@@ -15,7 +15,7 @@ As with every web API you can request new information by performing HTTP request
 
 Contents
 --------
-* [1. Getting started](#getting-started)
+* [1. Getting started](#1. getting-started)
 * [2. Terminology](#terminology)
   * [2.1 Item](#item)
   * [2.2 Location](#location)
