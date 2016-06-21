@@ -80,7 +80,7 @@ A few basic examples using Curl.
   {
     "url": "https://'brain_host'/api/locations/550052669dba59d03057cb74",
     "id": "550052669dba59d03057cb74",
-    "label": "My First Location,
+    "label": "My First Location",
     "custom": null,
     "time_created": "2016-06-15T13:33:23.399Z",
     "time_updated": "2016-06-15T13:33:23.399Z"
