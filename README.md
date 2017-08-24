@@ -27,19 +27,19 @@ Contents
   * [3.5 References](#references)  
 
 1. Getting started
-===============
+--------
 
 We do advise you to take a quick look at our [quick start](quick-start.md) for some hints and tooling. In the rest of the documentation we assume that you understand HTTP, JSON and that you know which tools you can use to work with them.
 
 Go to [Getting started](quick-start.md)
 
 2. Terminology
-===========
+--------------
 
 The Intellifi concept is based upon [items](#item) and [locations](#location). Please take some time to familiarize yourself with these definitions. They will make it way easier to understand this API.
 
 2.1 Item
-----
+--------
 
 An item is an object (or even a person) that you tag using a RFID emitter. Currently our eco system can detect both RFID EPC Gen2 tags, also know as RAIN RFID tags, and modern Bluetooth LE beacons (iBeacon and Eddystone). 
 When an item is detected for the first time by one of our devices, it's immediately available as a resource in our web API. Our system keeps this resource as a reference to this item. You can use it to see where the item is or where it has been seen for the last time.
@@ -62,7 +62,7 @@ Some types of SmartSpot devices offer the option to connect (extra) external ant
 Location configuration is done automatically when you connect a SmartSpot to a Brain server for the first time. A default location will be created, the location label contains the serial number of the SmartSpot (i.e 'spot203'). You can easily change this label by doing a `PUT` on the location resource itself. We encourage you to add a meaningful name to a location (e.g. 'kitchen') as it's being used in the user interface at several places.
 
 3. Resources
-=========
+------------
 
 The top level resources are all collections, they contain the individual resources. Queries to these resources are wrapped inside a query object with information about the query and an array with the results.
 
