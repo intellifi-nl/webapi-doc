@@ -26,14 +26,14 @@ Contents
   * [3.4 Querying](#querying)
   * [3.5 References](#references)  
 
-1. Getting started
+1 Getting started
 --------
 
 We do advise you to take a quick look at our [quick start](quick-start.md) for some hints and tooling. In the rest of the documentation we assume that you understand HTTP, JSON and that you know which tools you can use to work with them.
 
 Go to [Getting started](quick-start.md)
 
-2. Terminology
+2 Terminology
 --------------
 
 The Intellifi concept is based upon [items](#item) and [locations](#location). Please take some time to familiarize yourself with these definitions. They will make it way easier to understand this API.
@@ -61,7 +61,7 @@ Some types of SmartSpot devices offer the option to connect (extra) external ant
 
 Location configuration is done automatically when you connect a SmartSpot to a Brain server for the first time. A default location will be created, the location label contains the serial number of the SmartSpot (i.e 'spot203'). You can easily change this label by doing a `PUT` on the location resource itself. We encourage you to add a meaningful name to a location (e.g. 'kitchen') as it's being used in the user interface at several places.
 
-3. Resources
+3 Resources
 ------------
 
 The top level resources are all collections, they contain the individual resources. Queries to these resources are wrapped inside a query object with information about the query and an array with the results.
@@ -80,8 +80,8 @@ Most time fields are appended with `_time`, the value is always an [ISO 8601 tim
 -----------
 In the table below is a list of all the resource collections. An detailed description of each individual resource type and their fields, is available on [this page](resources.md).
 
-| Name | Description | 
-| ----- | ---- | ----------- |
+| Name  | Description | 
+| ----- | ----------- |
 | [spots](resources.md#spots) | Status and config information for Intellifi SmartSpot devices. |
 | [locations](resources.md#locations) | Locations that SmartSpots devices may report to. |
 | [items](resources.md#items) | All detected items. |
