@@ -53,12 +53,6 @@ A special sub-resource is available to request all available item moves (it's a 
   * It could be usefull to enable the `auto_label_with_code_hex` in the Engine service. This allows you to retreive the code_hex values without doing lookups.
   * You may filter on a specific location or item id. /api/items/moves?item=5698f927e7831505f13a4aea
 
-Idears
-* You may be worried about the amount of items that could flow into your system. We are thinking about a way to configure SmartSpots to only allow certain code ranges with the flexible item sets approach. With this approach you can filter the amount of tags that come into your system.
-* We are also thinking about a smart way to delete unused items after a certain amount of time.
-* We are thinking about parsing the iBeacon and 
-* Please let us know if you like these idears, or if you have additional thoughts.
-
 Sets
 ----
 
@@ -282,11 +276,3 @@ Brain background processes are called services. Every service keept it's own res
 | `boot_count` | value | Is increased with 1 when the service starts. Is never cleared (unless the database is adjusted). |
 | `time_created` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was this resource created? |
 | `time_updated` | [8601 string](http://en.wikipedia.org/wiki/ISO_8601) | When was the last change on this resource? |
-
-Ideas
-------
-
-We are working constantly on new improvements and features. Some of the new forseen features are already mentioned here as a sneak preview.
-
-* Paths, allows you to define a path through several locatons. Would create a passing object for items that match the exact path.
-* Passings, would allow you to see certain movements of items through the system (as defined in paths). Basically this would be an advanced filter. Which of my items have moved from a to b and to c?
