@@ -209,15 +209,16 @@ The returned value depends on the configured signal levels. It's possible to adj
 Subscriptions
 -------------
 
-Most resources contain actual state. The items for example are always available and can show you where an item is seen. If you have your own backend that keeps state then you are probably only intrested in the changes to our data. We call these events. Internally we make every change by sending events to internal services. We make these events available in several ways. If you create subscriptions in this collection then two things can happen:
-1. Applying events are saved into the events resource.
-2. Applying events are immediatly uploaded to an external HTTP end-point (webhooks).
+Most resources contain actual state. The items for example are always available and can show you where an item is seen. If you have your own backend that keeps state then you are probably only interested in the changes to our data. We call these changes events. Internally we keep track of every change by sending events to internal services. We make these events available in several ways. If you create subscriptions in this collection then two things can happen:
+Events messages matching the subscription topic_filter:
+1. Are saved into the events resource,
+2. If the target_url has been provided, are immediatly pushed to an external (web) server ([Webhooks](https://github.com/intellifi-nl/push-doc)).
 
 | Field | Type | Description | 
 | ----- | ---- | ----------- |
 | `url` | string | Url to the individual resource. |
 | `id` | [ObjectId](http://docs.mongodb.org/manual/reference/object-id/) | Unique identifier for resource. |
-| `topic_filter` | string | MQTT filter that is applied to all events. Allows you to select the events. |
+| `topic_filter` | string | MQTT filter that is applied to all events. Allows you to select and filter events. The list of topics can be found here: [List of MQTT Topics](https://github.com/intellifi-nl/doc-push/blob/master/mqtt_topics.md#format) |
 | `description` | string | Add some notes if you like. |
 | `database_hold_time_h` | value | The number of hours that this event is kept in the database. Only use larger numbers if you know what you are doing. A couple of hours is enough for most use cases. |
 | `target_url` | string | This is a valid url to an external service that all applicable events are pushed to (webhook). Configure to null if you don't wish to use this (default). |
@@ -252,8 +253,6 @@ The topic object is always filled with these properties:
 | `resource` | [reference](README.md#reference) | Reference to one of the resources. Please note that it's an event from the past, the resource may not exist anymore. |
 | `action` | string | Indicates the kind of event that was executed. In most cases it's a verb. I.e. 'connected', 'created' etc.
 | `arguments` | object | Extra arguments may be added to a topic string, it depends on the `resource_type` and the `action` what extra arguments are added.
-
-You may also query on these value by using a dot(.) in the url. More background information on the [topic format](https://github.com/intellifi-nl/doc-push/blob/master/mqtt_topics.md#format) can be found in the push documentation.
 
 Be carefull with the given `time_create` and `time_device` fields. Intellifi Spots can buffer events in case of a network loss (a very small number for the moment). If you are traversing over the resource then you should look at `time_create`, eventual old events that pop up will just be in your result. If you are actually doing something with the event then you should look at `time_device`!
 
